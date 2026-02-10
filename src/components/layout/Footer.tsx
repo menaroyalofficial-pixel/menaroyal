@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { brandService } from "@/services/brandService";
+import { emailService } from "@/services/emailService";
 import { toast } from "sonner";
 
 const Footer = () => {
@@ -14,6 +15,9 @@ const Footer = () => {
     setIsSubscribing(true);
     try {
       await brandService.subscribeToJournal(email);
+      // Send Welcome Email
+      await emailService.sendNewsletterWelcome(email);
+
       toast.success("Welcome to the Collective Journal.");
       setEmail("");
     } catch (error: any) {

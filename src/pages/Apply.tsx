@@ -2,6 +2,7 @@ import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { brandService } from "@/services/brandService";
+import { emailService } from "@/services/emailService";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { ArrowRight, Loader2 } from "lucide-react";
@@ -23,26 +24,9 @@ const Apply = () => {
 
         try {
             await brandService.applyToCollective(formData);
-            // 2. Notify the Admin
-            const adminEmailBody = {
-                to: "menaroyalofficial@gmail.com",
-                subject: `New Collective Application: ${formData.company_name}`,
-                html: `
-                    <div style="font-family: serif; max-width: 600px; padding: 40px; border: 1px solid #eee;">
-                        <h2 style="font-weight: 300;">New Intake Request</h2>
-                        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
-                        <p><strong>Brand:</strong> ${formData.company_name}</p>
-                        <p><strong>Contact:</strong> ${formData.contact_name}</p>
-                        <p><strong>Portfolio:</strong> <a href="${formData.portfolio_url}">${formData.portfolio_url}</a></p>
-                        <p><strong>Message:</strong> ${formData.message}</p>
-                        <div style="margin-top: 30px;">
-                            <a href="${window.location.origin}/admin" style="background: black; color: white; padding: 12px 24px; text-decoration: none; font-size: 10px; text-transform: uppercase;">Review in Vault</a>
-                        </div>
-                    </div>
-                `
-            };
 
-            await supabase.functions.invoke('send-email', { body: adminEmailBody });
+            // 2. Notify the Admin using the centralized service
+            await emailService.sendAdminNotification(formData);
 
             toast.success("Identity Archival Request Received.");
             setFormData({
