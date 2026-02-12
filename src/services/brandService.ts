@@ -101,7 +101,8 @@ export const brandService = {
             .insert([{
                 name: companyName,
                 slug: slug,
-                status: 'pending'
+                status: 'pending',
+                designer_email: designerEmail
             }])
             .select()
             .single();

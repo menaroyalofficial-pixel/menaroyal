@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search as SearchIcon, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
-import { products, categories } from "@/data/mockData";
+import { productService } from "@/services/productService";
 import { Link } from "react-router-dom";
 
 interface SearchOverlayProps {
@@ -11,23 +11,43 @@ interface SearchOverlayProps {
 
 const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
     const [query, setQuery] = useState("");
-    const [results, setResults] = useState(products.slice(0, 8));
-    useEffect(() => {
-        if (query.trim() === "") {
-            setResults(products.slice(0, 8));
-        } else {
-            const filtered = products.filter(p => {
-                const category = categories.find(c => c.id === p.categoryId);
-                const categoryName = category ? category.name.toLowerCase() : "";
+    const [results, setResults] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
-                return (
-                    p.name.toLowerCase().includes(query.toLowerCase()) ||
-                    p.brandName.toLowerCase().includes(query.toLowerCase()) ||
-                    categoryName.includes(query.toLowerCase())
-                );
-            });
-            setResults(filtered);
-        }
+    useEffect(() => {
+        const performSearch = async () => {
+            setLoading(true);
+            try {
+                // Fetch all products for the search context
+                const allProducts = await productService.getProducts({ sortBy: 'newest' });
+
+                if (query.trim() === "") {
+                    setResults(allProducts.slice(0, 8));
+                } else {
+                    const filtered = allProducts.filter((p: any) => {
+                        const brandName = p.brands?.name?.toLowerCase() || "";
+                        const productName = p.name.toLowerCase();
+                        const searchTerm = query.toLowerCase();
+
+                        return (
+                            productName.includes(searchTerm) ||
+                            brandName.includes(searchTerm)
+                        );
+                    });
+                    setResults(filtered);
+                }
+            } catch (error) {
+                console.error("Discovery Error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const timer = setTimeout(() => {
+            performSearch();
+        }, 300);
+
+        return () => clearTimeout(timer);
     }, [query]);
 
     // Handle background scroll and escape key
@@ -100,7 +120,11 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
                                         {query ? `Found in Archive (${results.length})` : "Featured Exhibits"}
                                     </p>
 
-                                    {results.length > 0 ? (
+                                    {loading ? (
+                                        <div className="py-24 flex items-center justify-center lg:col-span-9">
+                                            <div className="w-8 h-8 border-2 border-foreground/10 border-t-foreground rounded-full animate-spin" />
+                                        </div>
+                                    ) : results.length > 0 ? (
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
                                             {results.map((product) => (
                                                 <Link
@@ -109,11 +133,11 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
                                                     onClick={onClose}
                                                     className="group block space-y-4"
                                                 >
-                                                    <div className="aspect-[3/4] overflow-hidden bg-secondary/20">
+                                                    <div className="aspect-[3/4] overflow-hidden bg-secondary/20 border border-border/10">
                                                         <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                                                     </div>
                                                     <div>
-                                                        <p className="font-sans text-[8px] editorial-spacing text-muted-foreground mb-1">{product.brandName.toUpperCase()}</p>
+                                                        <p className="font-sans text-[8px] editorial-spacing text-muted-foreground mb-1">{product.brands?.name?.toUpperCase()}</p>
                                                         <h4 className="font-serif text-sm font-light flex items-center justify-between">
                                                             <span>{product.name}</span>
                                                             <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />

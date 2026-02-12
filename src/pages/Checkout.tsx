@@ -7,6 +7,9 @@ import { motion } from "framer-motion";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { toast } from "sonner";
 import { Loader2, ShieldCheck, Globe, Truck } from "lucide-react";
+import { orderService } from "@/services/orderService";
+import { supabase } from "@/lib/supabase";
+import { emailService } from "@/services/emailService";
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useStore();
@@ -19,16 +22,54 @@ const Checkout = () => {
         return null;
     }
 
-    const handlePaymentSuccess = (details: any) => {
+    const handlePaymentSuccess = async (details: any) => {
         setIsProcessing(true);
-        toast.success("Transaction Excellence: Your order has been archived and secured.");
-        console.log("Payment Details:", details);
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
 
-        // In a real app, you would save the order to Supabase here
-        setTimeout(() => {
-            clearCart();
-            navigate("/account"); // Redirect to orders/account
-        }, 2000);
+            // Log the acquisition in the global archive
+            const orderRecord = await orderService.createOrder({
+                customer_id: user?.id,
+                customer_email: details.payer.email_address,
+                total_amount: cartTotal,
+                platform_fee: cartTotal * 0.15, // Institutional platform fee
+                shipping_address: details.purchase_units[0].shipping?.address || {},
+                items: cart.map(item => ({
+                    product_id: item.product.id,
+                    brand_id: item.product.brand_id,
+                    quantity: item.quantity,
+                    price_at_purchase: item.product.price
+                }))
+            });
+
+            // Dispatch Institutional Dispatch Notifications
+            await emailService.sendOrderConfirmation(details.payer.email_address, {
+                id: orderRecord.id,
+                total_amount: cartTotal,
+                items: cart.map(item => ({
+                    product_name: item.product.name,
+                    quantity: item.quantity,
+                    price_at_purchase: item.product.price
+                }))
+            });
+
+            await emailService.sendAdminOrderAlert({
+                id: orderRecord.id,
+                customer_email: details.payer.email_address,
+                total_amount: cartTotal
+            });
+
+            toast.success("Transaction Excellence: Your order has been archived and secured.");
+
+            setTimeout(() => {
+                clearCart();
+                navigate("/account");
+            }, 2000);
+        } catch (error) {
+            console.error("Archival Error:", error);
+            toast.error("Institutional Logging Error: Payment received but archival failed. Contact concierge.");
+            setIsProcessing(false);
+        }
     };
 
     return (

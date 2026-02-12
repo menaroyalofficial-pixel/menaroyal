@@ -34,6 +34,7 @@ create table brands (
   featured boolean default false,
   stripe_connect_id text,
   status text default 'pending' check (status in ('pending', 'active', 'suspended')),
+  designer_email text,
   created_at timestamp with time zone default now() not null
 );
 

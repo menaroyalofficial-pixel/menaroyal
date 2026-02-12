@@ -7,7 +7,7 @@ export interface Brand {
   country: string;
   category: string;
   logo?: string;
-  coverImage: string;
+  cover_image: string;
   featured: boolean;
 }
 
@@ -19,8 +19,8 @@ export interface Product {
   price: number;
   currency: string;
   images: string[];
-  categoryId: string;
-  brandId: string;
+  category_id: string;
+  brand_id: string;
   brandName: string;
   materials: string[];
   sizes: string[];
@@ -82,7 +82,7 @@ export const brands: Brand[] = [
     story: "Founded in Beirut in 1987, Dar Al Arous has dressed generations of brides across the Middle East. Each gown is handcrafted over 400 hours using techniques passed down through three generations. The atelier's signature lies in its fusion of Ottoman-era embroidery patterns with contemporary silhouettes, creating pieces that honor heritage while embracing modernity.",
     country: "Lebanon",
     category: "Bridal",
-    coverImage: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80",
+    cover_image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80",
     featured: true,
   },
   {
@@ -93,7 +93,7 @@ export const brands: Brand[] = [
     story: "Maison Noor reimagines the traditional caftan for the modern woman. Based in Marrakech, the brand sources silk from the finest mills and employs local artisans who practice age-old techniques of hand-weaving and embellishment. Every piece tells a story of Moroccan craftsmanship meeting Parisian elegance.",
     country: "Morocco",
     category: "Fashion",
-    coverImage: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&q=80",
+    cover_image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&q=80",
     featured: true,
   },
   {
@@ -104,7 +104,7 @@ export const brands: Brand[] = [
     story: "Khalil Atelier bridges the gap between art and furniture. Working from a sprawling workshop in Amman, designer Rami Khalil creates pieces inspired by the geometric patterns of Islamic architecture. Each piece is made from locally sourced walnut and marble, combining traditional Levantine woodworking with modern minimalism.",
     country: "Jordan",
     category: "Maison",
-    coverImage: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80",
+    cover_image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80",
     featured: true,
   },
 ];
@@ -123,8 +123,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=800&q=80",
       "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80",
     ],
-    categoryId: "cat-1",
-    brandId: "brand-1",
+    category_id: "cat-1",
+    brand_id: "brand-1",
     brandName: "Dar Al Arous",
     materials: ["French Chantilly Lace", "Silk Organza", "Freshwater Pearls"],
     sizes: ["XS", "S", "M", "L"],
@@ -144,8 +144,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=800&q=80",
       "https://images.unsplash.com/photo-1594463750939-ebb28c3f7f75?w=800&q=80",
     ],
-    categoryId: "cat-1",
-    brandId: "brand-1",
+    category_id: "cat-1",
+    brand_id: "brand-1",
     brandName: "Dar Al Arous",
     materials: ["Mikado Silk", "Crystal Embellishments"],
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -165,8 +165,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80",
       "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=800&q=80",
     ],
-    categoryId: "cat-1",
-    brandId: "brand-1",
+    category_id: "cat-1",
+    brand_id: "brand-1",
     brandName: "Dar Al Arous",
     materials: ["Italian Tulle", "Swarovski Crystals", "Silk Satin"],
     sizes: ["S", "M", "L"],
@@ -185,8 +185,8 @@ export const products: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1594463750939-ebb28c3f7f75?w=800&q=80",
     ],
-    categoryId: "cat-1",
-    brandId: "brand-1",
+    category_id: "cat-1",
+    brand_id: "brand-1",
     brandName: "Dar Al Arous",
     materials: ["Italian Crepe", "Gold Leaf Thread"],
     sizes: ["XS", "S", "M", "L"],
@@ -205,8 +205,8 @@ export const products: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=800&q=80",
     ],
-    categoryId: "cat-1",
-    brandId: "brand-1",
+    category_id: "cat-1",
+    brand_id: "brand-1",
     brandName: "Dar Al Arous",
     materials: ["Silk Organza", "French Lace", "3D Floral Appliqués"],
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -227,8 +227,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80",
       "https://images.unsplash.com/photo-1590735213920-68192a487bc2?w=800&q=80",
     ],
-    categoryId: "cat-2",
-    brandId: "brand-2",
+    category_id: "cat-2",
+    brand_id: "brand-2",
     brandName: "Maison Noor",
     materials: ["Pure Silk", "Gold Thread Embroidery"],
     sizes: ["S", "M", "L", "XL"],
@@ -247,8 +247,8 @@ export const products: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1590735213920-68192a487bc2?w=800&q=80",
     ],
-    categoryId: "cat-2",
-    brandId: "brand-2",
+    category_id: "cat-2",
+    brand_id: "brand-2",
     brandName: "Maison Noor",
     materials: ["Handwoven Wool", "Silk Lining"],
     sizes: ["XS", "S", "M", "L"],
@@ -267,8 +267,8 @@ export const products: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80",
     ],
-    categoryId: "cat-2",
-    brandId: "brand-2",
+    category_id: "cat-2",
+    brand_id: "brand-2",
     brandName: "Maison Noor",
     materials: ["Silk Twill"],
     sizes: ["One Size"],
@@ -287,8 +287,8 @@ export const products: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1590735213920-68192a487bc2?w=800&q=80",
     ],
-    categoryId: "cat-2",
-    brandId: "brand-2",
+    category_id: "cat-2",
+    brand_id: "brand-2",
     brandName: "Maison Noor",
     materials: ["Heavyweight Wool", "Silk Lining", "Embroidered Accents"],
     sizes: ["S", "M", "L"],
@@ -307,8 +307,8 @@ export const products: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80",
     ],
-    categoryId: "cat-2",
-    brandId: "brand-2",
+    category_id: "cat-2",
+    brand_id: "brand-2",
     brandName: "Maison Noor",
     materials: ["Organic Cotton", "Hand-Tied Tassels"],
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -329,8 +329,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
       "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
     ],
-    categoryId: "cat-3",
-    brandId: "brand-3",
+    category_id: "cat-3",
+    brand_id: "brand-3",
     brandName: "Khalil Atelier",
     materials: ["Jordanian Sandstone", "Black Walnut"],
     sizes: ["Standard"],
@@ -349,8 +349,8 @@ export const products: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
     ],
-    categoryId: "cat-3",
-    brandId: "brand-3",
+    category_id: "cat-3",
+    brand_id: "brand-3",
     brandName: "Khalil Atelier",
     materials: ["Bent Walnut Wood", "Hand-Woven Leather"],
     sizes: ["Standard"],
@@ -369,8 +369,8 @@ export const products: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
     ],
-    categoryId: "cat-3",
-    brandId: "brand-3",
+    category_id: "cat-3",
+    brand_id: "brand-3",
     brandName: "Khalil Atelier",
     materials: ["Solid Brass", "Smoked Glass"],
     sizes: ["Standard"],
@@ -389,8 +389,8 @@ export const products: Product[] = [
     images: [
       "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
     ],
-    categoryId: "cat-3",
-    brandId: "brand-3",
+    category_id: "cat-3",
+    brand_id: "brand-3",
     brandName: "Khalil Atelier",
     materials: ["Live-Edge Olive Wood", "Polished Concrete"],
     sizes: ["Seats 6", "Seats 8"],
@@ -403,13 +403,13 @@ export const products: Product[] = [
 
 export const getProductsByCategory = (categorySlug: string) =>
   products.filter((p) => {
-    const cat = categories.find((c) => c.id === p.categoryId);
+    const cat = categories.find((c) => c.id === p.category_id);
     return cat?.slug === categorySlug;
   });
 
 export const getProductsByBrand = (brandSlug: string) =>
   products.filter((p) => {
-    const brand = brands.find((b) => b.id === p.brandId);
+    const brand = brands.find((b) => b.id === p.brand_id);
     return brand?.slug === brandSlug;
   });
 

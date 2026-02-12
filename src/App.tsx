@@ -61,6 +61,11 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/designer/login" element={<DesignerLogin />} />
               <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/dashboard/designer" element={
+                <ProtectedRoute fallback="/designer/login">
+                  <DesignerDashboard />
+                </ProtectedRoute>
+              } />
               <Route path="/designer" element={
                 <ProtectedRoute fallback="/designer/login">
                   <DesignerDashboard />

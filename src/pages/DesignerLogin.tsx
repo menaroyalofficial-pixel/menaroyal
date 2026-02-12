@@ -17,7 +17,7 @@ const DesignerLogin = () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
                 const { data } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
-                if (data?.role === 'brand_admin') navigate("/designer");
+                if (data?.role === 'brand_admin') navigate("/dashboard/designer");
             }
         };
         checkExisting();
@@ -42,7 +42,7 @@ const DesignerLogin = () => {
 
             if (profile?.role === 'brand_admin' || profile?.role === 'super_admin') {
                 toast.success("Atelier Access Granted.");
-                navigate("/designer");
+                navigate("/dashboard/designer");
             } else {
                 await supabase.auth.signOut();
                 toast.error("Account not linked to an active Atelier.");
