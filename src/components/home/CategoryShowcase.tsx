@@ -10,7 +10,11 @@ const CategoryShowcase = () => {
   useEffect(() => {
     const fetchCats = async () => {
       const data = await productService.getCategories();
-      setCategories(data || []);
+      // Filter to show only active categories (hide maison, jewelry, fashion for now)
+      const visibleCategories = (data || []).filter((cat: any) =>
+        ['abaya', 'caftan', 'djellaba', 'evening', 'bridal'].includes(cat.id)
+      );
+      setCategories(visibleCategories);
     };
     fetchCats();
   }, []);

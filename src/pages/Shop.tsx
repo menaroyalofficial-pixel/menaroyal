@@ -36,7 +36,11 @@ const Shop = () => {
           productService.getCategories(),
           brandService.getActiveBrands()
         ]);
-        setCategories(cats || []);
+        // Filter to show only active categories
+        const visibleCategories = (cats || []).filter((cat: any) =>
+          ['abaya', 'caftan', 'djellaba', 'evening', 'bridal'].includes(cat.id)
+        );
+        setCategories(visibleCategories);
         setBrands(activeBrands || []);
       } catch (error) {
         console.error("Archive Meta Fetch Error:", error);
@@ -155,31 +159,34 @@ const Shop = () => {
                   </div>
                 </div>
 
-                {/* Color Palette filter */}
+                {/* MENA Countries Filter */}
                 <div className="space-y-8 pt-12 border-t border-border">
-                  <h3 className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase opacity-40">Heritage Tones</h3>
-                  <div className="grid grid-cols-6 gap-3">
+                  <h3 className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase opacity-40">Country of Origin</h3>
+                  <div className="flex flex-col gap-4">
                     <button
                       onClick={() => setSelectedColor("all")}
-                      className={`w-full aspect-square border border-border flex items-center justify-center ${selectedColor === "all" ? "bg-black" : "hover:border-foreground"}`}
-                      title="All Colors"
+                      className={`text-left font-sans text-[11px] editorial-spacing transition-all ${selectedColor === "all" ? "text-foreground font-bold" : "text-muted-foreground hover:text-foreground"
+                        }`}
                     >
-                      <X className={`w-3 h-3 ${selectedColor === "all" ? "text-white" : "text-muted-foreground"}`} />
+                      ALL COUNTRIES
                     </button>
-                    {institutionalColors.map((color) => (
+                    {[
+                      { name: "Morocco", value: "morocco" },
+                      { name: "Lebanon", value: "lebanon" },
+                      { name: "Egypt", value: "egypt" },
+                      { name: "UAE", value: "uae" },
+                      { name: "Saudi Arabia", value: "saudi" },
+                      { name: "Jordan", value: "jordan" },
+                      { name: "Tunisia", value: "tunisia" },
+                      { name: "Kuwait", value: "kuwait" }
+                    ].map((country) => (
                       <button
-                        key={color.value}
-                        onClick={() => setSelectedColor(color.value)}
-                        className={`w-full aspect-square border border-border group relative`}
-                        style={{ backgroundColor: color.hex }}
-                        title={color.name}
+                        key={country.value}
+                        onClick={() => setSelectedColor(country.value)}
+                        className={`text-left font-sans text-[11px] editorial-spacing transition-all ${selectedColor === country.value ? "text-foreground font-bold" : "text-muted-foreground hover:text-foreground"
+                          }`}
                       >
-                        {selectedColor === color.value && (
-                          <div className="absolute inset-0 border-2 border-foreground mix-blend-difference" />
-                        )}
-                        <div className="absolute inset-x-0 -bottom-8 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">
-                          <span className="font-sans text-[7px] editorial-spacing bg-white px-2 py-1 border border-border shadow-sm">{color.name}</span>
-                        </div>
+                        {country.name.toUpperCase()}
                       </button>
                     ))}
                   </div>
