@@ -10,7 +10,8 @@ const navLinks = [
   { label: "Abayas", href: "/shop/abaya" },
   { label: "Caftans", href: "/shop/caftan" },
   { label: "Djellabas", href: "/shop/djellaba" },
-  { label: "Maison", href: "/shop/maison" },
+  // TEMPORARY: Maison hidden - uncomment to reactivate
+  // { label: "Maison", href: "/shop/maison" },
   { label: "Jewelry", href: "/shop/jewelry" },
   { label: "Stories", href: "/stories" },
   { label: "The Houses", href: "/designers" },

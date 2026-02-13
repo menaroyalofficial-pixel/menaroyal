@@ -243,7 +243,8 @@ const Onboarding = () => {
                                             <option value="">CATEGORY</option>
                                             <option value="Bridal">Bridal</option>
                                             <option value="Fashion">Fashion</option>
-                                            <option value="Maison">Maison</option>
+                                            {/* TEMPORARY: Maison hidden - uncomment to reactivate */}
+                                            {/* <option value="Maison">Maison</option> */}
                                             <option value="Jewelry">Jewelry</option>
                                         </select>
                                     </div>

@@ -10,7 +10,9 @@ const CategoryShowcase = () => {
   useEffect(() => {
     const fetchCats = async () => {
       const data = await productService.getCategories();
-      setCategories(data || []);
+      // TEMPORARY: Hide 'maison' category - remove filter to reactivate
+      const visibleCategories = (data || []).filter((cat: any) => cat.id !== 'maison');
+      setCategories(visibleCategories);
     };
     fetchCats();
   }, []);

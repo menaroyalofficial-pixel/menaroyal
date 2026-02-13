@@ -36,7 +36,9 @@ const Shop = () => {
           productService.getCategories(),
           brandService.getActiveBrands()
         ]);
-        setCategories(cats || []);
+        // TEMPORARY: Hide 'maison' category - remove filter to reactivate
+        const visibleCategories = (cats || []).filter((cat: any) => cat.id !== 'maison');
+        setCategories(visibleCategories);
         setBrands(activeBrands || []);
       } catch (error) {
         console.error("Archive Meta Fetch Error:", error);

@@ -57,7 +57,8 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <h3 className="font-sans text-[10px] editorial-spacing mb-8 text-white/30">The Shop</h3>
             <ul className="space-y-4">
-              {["Bridal", "Fashion", "Maison", "Jewelry"].map((item) => (
+              {/* TEMPORARY: Maison hidden - restore by adding "Maison" back to array */}
+              {["Bridal", "Fashion", "Jewelry"].map((item) => (
                 <li key={item}>
                   <Link
                     to={`/shop/${item.toLowerCase()}`}
