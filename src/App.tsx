@@ -24,6 +24,7 @@ import Login from "./pages/Login";
 import Shipping from "./pages/Shipping";
 import Apply from "./pages/Apply";
 import Checkout from "./pages/Checkout";
+import Legal from "./pages/Legal";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/layout/ScrollToTop";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -61,11 +62,10 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/designer/login" element={<DesignerLogin />} />
               <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/dashboard/designer" element={
-                <ProtectedRoute fallback="/designer/login">
-                  <DesignerDashboard />
-                </ProtectedRoute>
-              } />
+              <Route path="/apply" element={<Apply />} />
+              <Route path="/legal" element={<Legal />} />
+              <Route path="/privacy" element={<Legal />} />
+              <Route path="/terms" element={<Legal />} />
               <Route path="/designer" element={
                 <ProtectedRoute fallback="/designer/login">
                   <DesignerDashboard />

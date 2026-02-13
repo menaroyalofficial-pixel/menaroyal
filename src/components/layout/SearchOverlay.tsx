@@ -90,6 +90,8 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
                             <div className="relative border-b border-border pb-8">
                                 <input
                                     autoFocus
+                                    id="site-search"
+                                    name="q"
                                     type="text"
                                     placeholder="SEARCH THE ARCHIVE..."
                                     value={query}
@@ -103,7 +105,7 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
                                 <div className="lg:col-span-3">
                                     <p className="font-sans text-[10px] editorial-spacing text-muted-foreground mb-8 uppercase">Suggested Houses</p>
                                     <div className="grid grid-cols-1 gap-4">
-                                        {["DAR AL AROUS", "ELIE SAAB", "ASH STUDIO", "NOON BY NOOR"].map(house => (
+                                        {["DAR RIME", "ATELIER ATLAS", "DAR AL AROUS", "KHALIL ATELIER"].map(house => (
                                             <button
                                                 key={house}
                                                 onClick={() => setQuery(house)}

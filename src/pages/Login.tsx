@@ -75,6 +75,8 @@ const Login = () => {
                         <div className="space-y-4">
                             {mode === 'signup' && (
                                 <input
+                                    id="full-name"
+                                    name="full_name"
                                     type="text"
                                     placeholder="FULL NAME"
                                     value={fullName}
@@ -84,6 +86,8 @@ const Login = () => {
                                 />
                             )}
                             <input
+                                id="email"
+                                name="email"
                                 type="email"
                                 placeholder="EMAIL ADDRESS"
                                 value={email}
@@ -92,6 +96,8 @@ const Login = () => {
                                 required
                             />
                             <input
+                                id="password"
+                                name="password"
                                 type="password"
                                 placeholder="PASSCODE"
                                 value={password}

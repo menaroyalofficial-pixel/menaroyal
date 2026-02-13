@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Minus, Plus, ChevronRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+import { getProductImage } from "@/utils/localImages";
+
 const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [product, setProduct] = useState<any>(null);
@@ -86,6 +88,8 @@ const ProductDetail = () => {
     }
   };
 
+  const mainImageSrc = slug ? getProductImage(slug, selectedImage) : null;
+
   return (
     <Layout>
       <div className="bg-background min-h-screen">
@@ -112,7 +116,7 @@ const ProductDetail = () => {
             >
               <div className="aspect-[3/4] overflow-hidden bg-secondary/10 mb-8 relative group">
                 <img
-                  src={product.images?.[selectedImage] || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop"}
+                  src={mainImageSrc || product.images?.[selectedImage] || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop"}
                   alt={product.name}
                   className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
                 />

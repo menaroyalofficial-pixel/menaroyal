@@ -75,6 +75,8 @@ const DesignerLogin = () => {
                     <form onSubmit={handleAuth} className="space-y-6">
                         <div className="space-y-4">
                             <input
+                                id="designer-email"
+                                name="email"
                                 type="email"
                                 placeholder="HOUSE EMAIL ADDRESS"
                                 value={email}
@@ -83,6 +85,8 @@ const DesignerLogin = () => {
                                 required
                             />
                             <input
+                                id="designer-password"
+                                name="password"
                                 type="password"
                                 placeholder="ACCESS KEY"
                                 value={password}

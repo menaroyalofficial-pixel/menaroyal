@@ -18,14 +18,14 @@ const CategoryShowcase = () => {
   const getCategoryImage = (id: string) => {
     const images: Record<string, string> = {
       'bridal': "https://images.unsplash.com/photo-1594463750939-ebb28c3f7f75?w=800&q=80",
-      'caftan': "https://images.unsplash.com/photo-1590735213920-68192a487bc2?w=800&q=80",
-      'djellaba': "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80",
+      'abaya': '/sandstone-djellaba.jpg',
+      'caftan': '/royal-velvet-caftan.jpg',
+      'djellaba': '/sandstone-djellaba.jpg',
       'evening': "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=800&q=80",
-      'fashion': "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80",
       'maison': "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
       'jewelry': "https://images.unsplash.com/photo-1515562141589-67f0d569b4ae?w=800&q=80"
     };
-    return images[id] || images['fashion'];
+    return images[id] || images['caftan'];
   };
 
   return (

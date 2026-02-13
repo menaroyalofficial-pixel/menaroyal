@@ -102,6 +102,8 @@ const Footer = () => {
             </p>
             <form onSubmit={handleSubscribe} className="relative border-b border-white/20 pb-2 flex items-center">
               <input
+                id="newsletter-email"
+                name="email"
                 type="email"
                 required
                 value={email}
@@ -125,8 +127,8 @@ const Footer = () => {
             © 2026 MENA ROYAL COLLECTIVE. ALL ASSETS ARCHIVED.
           </p>
           <div className="flex gap-8">
-            <Link to="/stories" className="font-sans text-[8px] editorial-spacing text-white/20 hover:text-white/40">Privacy Policy</Link>
-            <Link to="/stories" className="font-sans text-[8px] editorial-spacing text-white/20 hover:text-white/40">Terms of Service</Link>
+            <Link to="/privacy" className="font-sans text-[8px] editorial-spacing text-white/20 hover:text-white/40 uppercase">Privacy Policy</Link>
+            <Link to="/terms" className="font-sans text-[8px] editorial-spacing text-white/20 hover:text-white/40 uppercase">Terms of Service</Link>
           </div>
         </div>
       </div>

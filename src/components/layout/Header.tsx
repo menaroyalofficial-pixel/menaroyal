@@ -7,12 +7,13 @@ import SearchOverlay from "./SearchOverlay";
 import { supabase } from "@/lib/supabase";
 
 const navLinks = [
-  { label: "Bridal", href: "/shop/bridal" },
-  { label: "Fashion", href: "/shop/fashion" },
+  { label: "Abayas", href: "/shop/abaya" },
+  { label: "Caftans", href: "/shop/caftan" },
+  { label: "Djellabas", href: "/shop/djellaba" },
   { label: "Maison", href: "/shop/maison" },
   { label: "Jewelry", href: "/shop/jewelry" },
-  { label: "Designers", href: "/designers" },
   { label: "Stories", href: "/stories" },
+  { label: "The Houses", href: "/designers" },
 ];
 
 const Header = () => {

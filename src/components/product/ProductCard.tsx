@@ -4,6 +4,8 @@ import { Product, formatPrice } from "@/data/mockData";
 import { useStore } from "@/contexts/StoreContext";
 import { motion } from "framer-motion";
 
+import { getProductImage } from "@/utils/localImages";
+
 interface ProductCardProps {
   product: Product;
   index?: number;
@@ -12,6 +14,7 @@ interface ProductCardProps {
 const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const { isInWishlist, addToWishlist, removeFromWishlist } = useStore();
   const wishlisted = isInWishlist(product.id);
+  const localSrc = getProductImage(product.slug);
 
   const toggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -29,10 +32,14 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
       <Link to={`/product/${product.slug}`} className="group block relative">
         <div className="relative aspect-[3/4] overflow-hidden bg-white mb-6">
           <img
-            src={product.images[0]}
+            src={localSrc || product.images[0] || "/placeholder.svg"}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
             loading="lazy"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = "/placeholder.svg";
+            }}
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
 

@@ -76,6 +76,8 @@ const AdminLogin = () => {
                     <form onSubmit={handleAuth} className="space-y-6">
                         <div className="space-y-4">
                             <input
+                                id="admin-email"
+                                name="email"
                                 type="email"
                                 placeholder="ADMIN IDENTIFIER"
                                 value={email}
@@ -84,6 +86,8 @@ const AdminLogin = () => {
                                 required
                             />
                             <input
+                                id="admin-password"
+                                name="password"
                                 type="password"
                                 placeholder="PASSCODE"
                                 value={password}
