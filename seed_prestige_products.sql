@@ -1,57 +1,130 @@
--- PRESTIGE COLLECTION SEED (V11 - ROOT ASSET PROTOCOL)
--- This script updates all local asset paths to the ROOT directory.
--- It works in conjunction with the simplified public folder strategy.
+-- MENA ROYAL: PRESTIGE ARCHIVE SEED (V12)
+-- Target: 50+ Premium Products with complete taxonomy
+-- Focus: Luxury, Heritage, and Occasion-based filtering
 
--- 1. Ensure Institutional Taxonomy (Categories) exists
-insert into categories (id, name, description) values 
-('abaya', 'Abayas', 'Contemporary modesty meets heritage craftsmanship.'),
-('caftan', 'Caftans', 'Elite heritage gowns featuring intricate artisanal embroidery.'),
-('djellaba', 'Djellabas', 'Traditional silhouettes reimagined for the contemporary archive.'),
-('maison', 'Maison', 'Curated furniture and textile art for the elevated home.')
-on conflict (id) do update set 
-  name = excluded.name,
-  description = excluded.description;
+-- ============================================
+-- 1. BRANDS (The Houses) - Multi-Origin
+-- ============================================
 
--- 2. Ensure Brands exist and are active
-insert into brands (name, slug, description, story, country, category, status, featured, cover_image)
-values 
-('Dar Rime', 'dar-rime', 'Elite Moroccan couture house specializing in hand-embroidered heritage pieces.', 'Founded in the heart of the Marrakech Medina, Dar Rime represents the pinnacle of Moroccan artisanal excellence, blending centuries-old embroidery techniques with contemporary luxury silhouettes.', 'Morocco', 'Fashion', 'active', true, '/royal-velvet-caftan.jpg'),
-('Atelier Atlas', 'atelier-atlas', 'Curators of the finest hand-knotted Berber rugs and heritage textile art.', 'Born from the high peaks of the Middle Atlas, our atelier partners with the most skilled woman-led cooperatives to archive and promote the ancestral art of weaving.', 'Morocco', 'Maison', 'active', true, 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80')
-on conflict (slug) do update set 
-  status = 'active',
-  featured = true,
-  cover_image = excluded.cover_image;
+INSERT INTO brands (name, slug, description, story, origin_country, status, featured, cover_image, instagram_handle)
+VALUES 
+('Maison Lalla', 'maison-lalla', 'Fes-based heritage house of high bridal couture.', 'Founded in 1924, Maison Lalla preserves the ancestral "Terz Fessi" embroidery techniques, passing them through four generations of master artisans.', 'Morocco', 'active', true, '/royal-velvet-caftan.jpg', '@maisonlalla_couture'),
+('Noor Al-Amal', 'noor-alamal', 'Dubai-based label specializing in contemporary minimalist abayas.', 'Noor Al-Amal redefines the modern abaya with architectural silhouettes and premium Japanese silk blends, designed for the international woman of the Gulf.', 'UAE', 'active', true, '/sandstone-djellaba.jpg', '@nooralamal_official'),
+('Amina Lebanese Jewelry', 'amina-jewelry', 'Beirut-based high jewelry atelier using heritage Phoenician motifs.', 'Amina Khalil crafts pieces that tell the story of the Mediterranean, using ethically sourced gemstones and 21k gold filigree.', 'Lebanon', 'active', true, 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80', '@aminajewelry_beirut'),
+('Qatari Silk Collective', 'qatari-silk', 'Doha-based textile house specializing in hand-painted silk evening wear.', 'A collective of female artisans in Doha creating one-of-a-kind silk pieces inspired by the shifting sands of the Qatari desert.', 'Qatar', 'active', true, '/silk-aurora-caftan.jpg', '@qatarisilk_collective'),
+('Sultana Saudi Couture', 'sultana-saudi', 'Riyadh high-fashion house blending royal heritage with gala elegance.', 'Providing gowns for the region''s most prestigious events, Sultana blends voluminous silhouettes with intricate crystal work.', 'Saudi Arabia', 'active', true, '/celestial-crepe-caftan.jpg', '@sultana_saudi'),
+('Petra Stones', 'petra-stones', 'Jordanian workshop crafting modern accessories from desert minerals.', 'Each piece is hand-carved in Wadi Rum, celebrating the raw beauty of Jordanian geology.', 'Jordan', 'active', true, '/sandstone-djellaba.jpg', '@petrastones_jo')
+ON CONFLICT (slug) DO UPDATE SET 
+  origin_country = EXCLUDED.origin_country,
+  instagram_handle = EXCLUDED.instagram_handle;
 
--- 3. Inject the Dar Rime Archive (ROOT Local Asset Integration)
-with dar_rime_brand as (select id from brands where slug = 'dar-rime' limit 1)
-insert into products (brand_id, category_id, name, slug, description, price, currency, images, materials, sizes, colors, stock, featured, published)
-values 
--- CAFTANS (Using Verified Local Assets at Root)
-((select id from dar_rime_brand), 'caftan', 'The Royal Velvet Caftan', 'the-royal-velvet-caftan', 'A majestic floor-length caftan in deep emerald velvet, featuring hand-embroidered gold sfifa trim. A masterpiece of Fes craftsmanship.', 1200.00, 'USD', ARRAY['/royal-velvet-caftan.jpg'], ARRAY['Premium Velvet', 'Gold Thread'], ARRAY['M', 'L'], ARRAY['Emerald'], 5, true, true),
-((select id from dar_rime_brand), 'caftan', 'The Silk Aurora Caftan', 'the-silk-aurora-caftan', 'Etherial hand-painted silk caftan with delicate pearl embellishments and a subtle shimmer.', 950.00, 'USD', ARRAY['/silk-aurora-caftan.jpg'], ARRAY['Hand-painted Silk', 'Freshwater Pearls'], ARRAY['S', 'M', 'L'], ARRAY['Aurora Pink'], 3, true, true),
-((select id from dar_rime_brand), 'caftan', 'The Heritage Brocade Caftan', 'the-heritage-brocade-caftan', 'Constructed from authentic Fes brocade with intricate silver thread patterns.', 1500.00, 'USD', ARRAY['/heritage-brocade-caftan.jpg', '/heritage-brocade-caftan-2.jpg'], ARRAY['Silk Brocade', 'Silver Thread'], ARRAY['M', 'L'], ARRAY['Royal Silver'], 2, true, true),
-((select id from dar_rime_brand), 'caftan', 'The Celestial Crepe Caftan', 'the-celestial-crepe-caftan', 'Midnight blue silk crepe with a crystal constellation work across the shoulders.', 1100.00, 'USD', ARRAY['/celestial-crepe-caftan.jpg'], ARRAY['Silk Crepe', 'Crystals'], ARRAY['XS', 'S', 'M'], ARRAY['Midnight Blue'], 4, true, true),
+-- ============================================
+-- 2. PRODUCTS (The Archive) - 50+ Items
+-- ============================================
 
--- ABAYAS (Using Local Djellaba assets as authentic placeholders)
-((select id from dar_rime_brand), 'abaya', 'The Midnight Abaya', 'the-midnight-abaya', 'A serene, flowing silhouette crafted from Japanese crepe. Minimalist elegance for the modern woman.', 800.00, 'USD', ARRAY['/sandstone-djellaba.jpg'], ARRAY['Japanese Crepe'], ARRAY['M', 'L'], ARRAY['Obsidian Black'], 10, true, true),
-((select id from dar_rime_brand), 'abaya', 'The Desert Rose Abaya', 'the-desert-rose-abaya', 'Soft linen blend in a muted rose tone, perfect for transitional seasons.', 650.00, 'USD', ARRAY['/atlas-wool-djellaba.jpg'], ARRAY['Linen Blend'], ARRAY['S', 'M', 'L'], ARRAY['Desert Rose'], 8, true, true),
+-- helper variables (assuming brands exist from above)
+DO $$
+DECLARE
+    br_morocco_id UUID := (SELECT id FROM brands WHERE slug = 'maison-lalla');
+    br_uae_id UUID := (SELECT id FROM brands WHERE slug = 'noor-alamal');
+    br_lebanon_id UUID := (SELECT id FROM brands WHERE slug = 'amina-jewelry');
+    br_qatar_id UUID := (SELECT id FROM brands WHERE slug = 'qatari-silk');
+    br_saudi_id UUID := (SELECT id FROM brands WHERE slug = 'sultana-saudi');
+    br_jordan_id UUID := (SELECT id FROM brands WHERE slug = 'petra-stones');
+BEGIN
 
--- DJELLABAS (Using Verified Local Assets)
-((select id from dar_rime_brand), 'djellaba', 'The Sandstone Djellaba', 'the-sandstone-djellaba', 'Handwoven premium cotton djellaba in a minimalist sandstone shade.', 450.00, 'USD', ARRAY['/sandstone-djellaba.jpg'], ARRAY['Handwoven Cotton'], ARRAY['M', 'L', 'XL'], ARRAY['Sandstone'], 8, false, true),
-((select id from dar_rime_brand), 'djellaba', 'The Atlas Wool Djellaba', 'the-atlas-wool-djellaba', 'Woven from the finest High Atlas merino wool. Institutional elegance for the winter season.', 600.00, 'USD', ARRAY['/atlas-wool-djellaba.jpg'], ARRAY['Merino Wool'], ARRAY['S', 'M', 'L'], ARRAY['Ivory'], 6, false, true)
+-- ---------------------------------------------------------
+-- COLLECTION A: BRIDAL HERITAGE (Caftans & Gowns)
+-- ---------------------------------------------------------
+INSERT INTO products (brand_id, category_id, name, slug, description, price, images, materials, sizes, colors, occasion_tags, product_type, stock_status, featured)
+VALUES
+(br_morocco_id, 'caftan', 'The Royal Fassi Bridal Caftan', 'bridal-fassi-1', 'A museum-grade wedding caftan in cream silk with gold thread embroidery.', 4500.00, ARRAY['/royal-velvet-caftan.jpg'], ARRAY['Pure Silk', '24k Gold Thread'], ARRAY['M', 'L'], ARRAY['Ivory'], ARRAY['bridal'], 'caftan', 'made_to_order', true),
+(br_morocco_id, 'caftan', 'Silver Thread Heritage Takchita', 'silver-takchita-1', 'Two-piece ceremonial gown featuring silver Zwaq embroidery.', 3800.00, ARRAY['/heritage-brocade-caftan.jpg'], ARRAY['Fine Brocade', 'Silver Sfifa'], ARRAY['S', 'M'], ARRAY['Silver', 'White'], ARRAY['bridal', 'special-occasions'], 'takchita', 'made_to_order', true),
+(br_saudi_id, 'caftan', 'The Empress Gala Gown', 'empress-gala-1', 'Voluminous velvet gown with hand-applied crystals and floor-length sleeves.', 5200.00, ARRAY['/royal-velvet-caftan.jpg'], ARRAY['Premium Velvet', 'Swarovski Crystals'], ARRAY['M'], ARRAY['Emerald Green'], ARRAY['special-occasions'], 'gown', 'in_stock', true),
+(br_qatar_id, 'caftan', 'Desert Moon Silk Caftan', 'desert-moon-1', 'Hand-painted silk caftan with a gradient of midnight blue to silver.', 2800.00, ARRAY['/celestial-crepe-caftan.jpg'], ARRAY['Italian Silk'], ARRAY['L'], ARRAY['Midnight Blue'], ARRAY['special-occasions'], 'caftan', 'in_stock', false),
+(br_morocco_id, 'caftan', 'Golden Hour Brocade Caftan', 'golden-hour-caftan', 'Stunning Fes brocade with geometric floral motifs in gold and apricot.', 3200.00, ARRAY['/heritage-brocade-caftan.jpg'], ARRAY['Silk Brocade'], ARRAY['M'], ARRAY['Gold'], ARRAY['bridal', 'special-occasions'], 'caftan', 'made_to_order', true);
 
-on conflict (slug) do update set 
-  images = excluded.images,
-  description = excluded.description,
-  price = excluded.price,
-  category_id = excluded.category_id,
-  name = excluded.name;
+-- ---------------------------------------------------------
+-- COLLECTION B: CONTEMPORARY ABAYAS (UAE & Saudi)
+-- ---------------------------------------------------------
+INSERT INTO products (brand_id, category_id, name, slug, description, price, images, materials, sizes, colors, occasion_tags, product_type, stock_status, featured)
+VALUES
+(br_uae_id, 'abaya', 'The Minimalist Silk Abaya', 'minimalist-silk-1', 'Pure Japanese silk abaya with a clean, architectural drape.', 1200.00, ARRAY['/sandstone-djellaba.jpg'], ARRAY['Japanese Silk'], ARRAY['S', 'M', 'L'], ARRAY['Black'], ARRAY['everyday-luxury'], 'abaya', 'in_stock', true),
+(br_uae_id, 'abaya', 'Sandstone Linen Abaya', 'sandstone-linen-1', 'Breathable Belgian linen abaya for the high-end resort traveler.', 950.00, ARRAY['/sandstone-djellaba.jpg'], ARRAY['Belgian Linen'], ARRAY['M'], ARRAY['Sand'], ARRAY['everyday-luxury', 'vacation'], 'abaya', 'in_stock', false),
+(br_uae_id, 'abaya', 'Onyx Evening Abaya', 'onyx-evening-1', 'Heavy crepe abaya with delicate lace inserts along the collar.', 1500.00, ARRAY['/sandstone-djellaba.jpg'], ARRAY['Silk Crepe', 'French Lace'], ARRAY['M', 'L'], ARRAY['Onyx'], ARRAY['special-occasions'], 'abaya', 'in_stock', true),
+(br_saudi_id, 'abaya', 'Royal Velvet Abaya', 'royal-velvet-abaya', 'Deep burgundy velvet abaya with structured shoulders.', 2100.00, ARRAY['/royal-velvet-caftan.jpg'], ARRAY['Velvet'], ARRAY['M'], ARRAY['Burgundy'], ARRAY['special-occasions'], 'abaya', 'made_to_order', true),
+(br_uae_id, 'abaya', 'Pearl Tulle Abaya', 'pearl-tulle-abaya', 'Exquisite tulle overlay adorned with hand-sewn freshwater pearls.', 2400.00, ARRAY['/silk-aurora-caftan.jpg'], ARRAY['Tulle', 'Pearls'], ARRAY['S', 'M'], ARRAY['White'], ARRAY['bridal', 'special-occasions'], 'abaya', 'made_to_order', true);
 
--- 4. Inject the Maison Archive (Berber Rugs - Keeping External for reliability)
-with atelier_atlas_brand as (select id from brands where slug = 'atelier-atlas' limit 1)
-insert into products (brand_id, category_id, name, slug, description, price, currency, images, materials, sizes, colors, stock, featured, published)
-values 
-((select id from atelier_atlas_brand), 'maison', 'Ben Ourain "Infinite Line"', 'ben-ourain-infinite-line', 'A quintessential hand-knotted high-pile rug in natural ivory wool with a single, dramatic obsidian line.', 2200.00, 'USD', ARRAY['https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80'], ARRAY['Organic Wool'], ARRAY['2x3m', '3x4m'], ARRAY['Natural Ivory'], 1, true, true),
-((select id from atelier_atlas_brand), 'maison', 'Azilal "Labyrinth"', 'azilal-labyrinth', 'A vibrant low-pile rug featuring multi-colored geometric patterns.', 1850.00, 'USD', ARRAY['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80'], ARRAY['Wool', 'Natural Dyes'], ARRAY['1.5x2.5m'], ARRAY['Multi'], 2, true, true)
-on conflict (slug) do update set 
-  images = excluded.images;
+-- ---------------------------------------------------------
+-- COLLECTION C: MODERN DJELLABAS & RESORT
+-- ---------------------------------------------------------
+INSERT INTO products (brand_id, category_id, name, slug, description, price, images, materials, sizes, colors, occasion_tags, product_type, stock_status, featured)
+VALUES
+(br_morocco_id, 'djellaba', 'Atlas Wool Winter Djellaba', 'atlas-wool-1', 'Heavy merino wool djellaba with a silk hood lining.', 850.00, ARRAY['/atlas-wool-djellaba.jpg'], ARRAY['Merino Wool'], ARRAY['M', 'L', 'XL'], ARRAY['Ivory'], ARRAY['everyday-luxury'], 'djellaba', 'in_stock', false),
+(br_morocco_id, 'djellaba', 'Silk Blend Summer Djellaba', 'summer-djellaba-1', 'Lightweight silk-cotton blend for the modern urban archive.', 650.00, ARRAY['/sandstone-djellaba.jpg'], ARRAY['Silk-Cotton'], ARRAY['S', 'M'], ARRAY['Light Blue'], ARRAY['everyday-luxury'], 'djellaba', 'in_stock', true),
+(br_jordan_id, 'djellaba', 'Wadi Rum Linen Tunic', 'wadi-rum-tunic', 'Structural linen tunic inspired by the silhouettes of the Levant.', 720.00, ARRAY['/sandstone-djellaba.jpg'], ARRAY['Linen'], ARRAY['M', 'L'], ARRAY['Terracotta'], ARRAY['everyday-luxury', 'vacation'], 'tunic', 'in_stock', false);
+
+-- ... (Adding many more for 50+)
+-- ---------------------------------------------------------
+-- REPETITIVE DATA SET GENERATION FOR VOLUME
+-- ---------------------------------------------------------
+
+INSERT INTO products (brand_id, category_id, name, slug, description, price, images, materials, sizes, colors, occasion_tags, product_type, stock_status, featured)
+VALUES
+(br_lebanon_id, 'jewelry', 'Phoenician Sun Necklace', 'phoenician-sun-1', '21k gold handcrafted medallion featuring ancient seafaring motifs.', 3200.00, ARRAY['https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80'], ARRAY['21k Gold'], ARRAY['One Size'], ARRAY['Gold'], ARRAY['special-occasions'], 'necklace', 'in_stock', true),
+(br_lebanon_id, 'jewelry', 'Cedar Branch Earrings', 'cedar-earrings-1', 'Delicate gold earrings inspired by the mountains of Lebanon.', 1800.00, ARRAY['https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=80'], ARRAY['18k Gold'], ARRAY['One Size'], ARRAY['Gold'], ARRAY['everyday-luxury'], 'earrings', 'in_stock', false),
+(br_lebanon_id, 'jewelry', 'Lapis Lazuli Ring', 'lapis-ring-1', 'Statement ring with a deep azure lapis lazuli stone.', 2400.00, ARRAY['https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&q=80'], ARRAY['Gold', 'Lapis Lazuli'], ARRAY['7', '8'], ARRAY['Blue'], ARRAY['special-occasions'], 'ring', 'in_stock', true);
+
+-- [Batch 1: 10 more caftans]
+INSERT INTO products (brand_id, category_id, name, slug, description, price, images, materials, sizes, colors, occasion_tags, product_type, stock_status)
+SELECT br_morocco_id, 'caftan', 'Premium Caftan ' || i, 'caftan-gen-' || i, 'High fidelity heritage caftan variant ' || i, 1500 + (i * 100), ARRAY['/royal-velvet-caftan.jpg'], ARRAY['Silk'], ARRAY['M'], ARRAY['Varie'], ARRAY['special-occasions'], 'caftan', 'in_stock'
+FROM generate_series(1, 10) as i;
+
+-- [Batch 2: 10 more abayas]
+INSERT INTO products (brand_id, category_id, name, slug, description, price, images, materials, sizes, colors, occasion_tags, product_type, stock_status)
+SELECT br_uae_id, 'abaya', 'Noor Abaya ' || i, 'abaya-gen-' || i, 'Minimalist luxury abaya variant ' || i, 900 + (i * 50), ARRAY['/sandstone-djellaba.jpg'], ARRAY['Crepe'], ARRAY['L'], ARRAY['Black'], ARRAY['everyday-luxury'], 'abaya', 'in_stock'
+FROM generate_series(1, 10) as i;
+
+-- [Batch 3: 10 more Jewelry]
+INSERT INTO products (brand_id, category_id, name, slug, description, price, images, materials, sizes, colors, occasion_tags, product_type, stock_status)
+SELECT br_lebanon_id, 'jewelry', 'Heritage Piece ' || i, 'jewel-gen-' || i, 'Boutique heritage jewelry series ' || i, 2000 + (i * 200), ARRAY['https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80'], ARRAY['Gold'], ARRAY['One Size'], ARRAY['Gold'], ARRAY['special-occasions'], 'jewelry', 'in_stock'
+FROM generate_series(1, 10) as i;
+
+-- [Batch 4: 5 more Djellabas]
+INSERT INTO products (brand_id, category_id, name, slug, description, price, images, materials, sizes, colors, occasion_tags, product_type, stock_status)
+SELECT br_morocco_id, 'djellaba', 'Urban Djellaba ' || i, 'djellaba-gen-' || i, 'Casual heritage djellaba ' || i, 400 + (i * 30), ARRAY['/atlas-wool-djellaba.jpg'], ARRAY['Cotton'], ARRAY['M'], ARRAY['Sand'], ARRAY['everyday-luxury'], 'djellaba', 'in_stock'
+FROM generate_series(1, 5) as i;
+
+-- [Batch 5: 5 Qatari Gowns]
+INSERT INTO products (brand_id, category_id, name, slug, description, price, images, materials, sizes, colors, occasion_tags, product_type, stock_status)
+SELECT br_qatar_id, 'caftan', 'Silk Gown ' || i, 'qatar-gen-' || i, 'Hand-painted Qatari luxury gown ' || i, 3000 + (i * 500), ARRAY['/silk-aurora-caftan.jpg'], ARRAY['Pure Silk'], ARRAY['M'], ARRAY['Multicolor'], ARRAY['special-occasions'], 'gown', 'made_to_order'
+FROM generate_series(1, 5) as i;
+
+END $$;
+
+-- ============================================
+-- 3. FINAL TAXONOMY SYNC
+-- ============================================
+
+-- Ensure all brands have origin set correctly if they didn't
+UPDATE brands SET origin_country = 'Morocco' WHERE slug = 'maison-lalla';
+UPDATE brands SET origin_country = 'UAE' WHERE slug = 'noor-alamal';
+UPDATE brands SET origin_country = 'Lebanon' WHERE slug = 'amina-jewelry';
+UPDATE brands SET origin_country = 'Qatar' WHERE slug = 'qatari-silk';
+UPDATE brands SET origin_country = 'Saudi Arabia' WHERE slug = 'sultana-saudi';
+UPDATE brands SET origin_country = 'Jordan' WHERE slug = 'petra-stones';
+
+-- Ensure SKUs are generated for all
+UPDATE products 
+SET sku = CONCAT(
+  UPPER(SUBSTRING(brands.slug, 1, 3)), 
+  '-', 
+  UPPER(category_id), 
+  '-', 
+  SUBSTRING(products.id::text, 1, 8)
+)
+FROM brands
+WHERE products.brand_id = brands.id AND (products.sku IS NULL OR products.sku = '');
+
+-- Verify
+-- SELECT count(*) FROM products;
