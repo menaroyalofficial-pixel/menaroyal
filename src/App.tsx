@@ -25,6 +25,8 @@ import Shipping from "./pages/Shipping";
 import Apply from "./pages/Apply";
 import Checkout from "./pages/Checkout";
 import Legal from "./pages/Legal";
+import About from "./pages/About";
+import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/layout/ScrollToTop";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -77,6 +79,8 @@ const App = () => (
                 </ProtectedRoute>
               } />
               <Route path="/apply" element={<Apply />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/faq" element={<FAQ />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

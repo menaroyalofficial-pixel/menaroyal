@@ -76,6 +76,8 @@ const Footer = () => {
             <h3 className="font-sans text-[10px] editorial-spacing mb-8 text-white/30">Institutional</h3>
             <ul className="space-y-4">
               {[
+                { label: "About Us", href: "/about" },
+                { label: "FAQ", href: "/faq" },
                 { label: "The Houses", href: "/designers" },
                 { label: "The Journal", href: "/stories" },
                 { label: "Global Shipping", href: "/shipping" },

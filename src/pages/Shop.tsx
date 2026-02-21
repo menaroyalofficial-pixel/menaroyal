@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import ProductCard from "@/components/product/ProductCard";
 import { productService } from "@/services/productService";
@@ -7,8 +7,17 @@ import { brandService } from "@/services/brandService";
 import { motion, AnimatePresence } from "framer-motion";
 import { SlidersHorizontal, X, ChevronDown } from "lucide-react";
 
+// Occasions map to URL slugs
+const OCCASIONS: Record<string, string> = {
+  'bridal': 'Bridal',
+  'wedding-guest': 'Wedding Guest',
+  'special-occasions': 'Special Occasions',
+  'everyday-luxury': 'Everyday Luxury'
+};
+
 const Shop = () => {
-  const { category: categorySlug } = useParams<{ category?: string }>();
+  const { category: urlSlug } = useParams<{ category?: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const [products, setProducts] = useState<any[]>([]);
@@ -19,6 +28,13 @@ const Shop = () => {
   const [selectedBrand, setSelectedBrand] = useState<string>("all");
   const [selectedColor, setSelectedColor] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("featured");
+
+  // New filters from URL
+  const productType = searchParams.get('type') || undefined;
+  const origin = searchParams.get('origin') || undefined;
+
+  // Derive origins from brands
+  const origins = Array.from(new Set(brands.map(b => b.origin_country).filter(Boolean)));
 
   const institutionalColors = [
     { name: "PURE IVORY", value: "ivory", hex: "#FDFCF0" },
@@ -51,13 +67,27 @@ const Shop = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const activeCat = categories.find(c => c.id === categorySlug);
+        // Determine if slug is an occasion or a category
+        const isOccasion = urlSlug && OCCASIONS[urlSlug];
+        const activeCat = !isOccasion ? categories.find(c => c.id === urlSlug) : null;
 
-        const data = await productService.getProducts({
-          categoryId: activeCat?.id || categorySlug,
+        // Build filters
+        const filters: any = {
           brandId: selectedBrand,
-          sortBy: sortBy
-        });
+          sortBy: sortBy,
+          productType: productType,
+          origin: origin
+        };
+
+        if (isOccasion) {
+          // It's an occasion (e.g. /shop/bridal)
+          filters.occasion = urlSlug; // 'bridal'
+        } else {
+          // It's a category (e.g. /shop/caftan) or all
+          filters.categoryId = activeCat?.id || urlSlug;
+        }
+
+        const data = await productService.getProducts(filters);
 
         let filtered = data || [];
         if (selectedColor !== "all") {
@@ -72,12 +102,31 @@ const Shop = () => {
       }
     };
 
-    if (categories.length > 0) {
+    if (categories.length >= 0) { // Allow running even if categories empty
       fetchProducts();
     }
-  }, [categorySlug, selectedBrand, selectedColor, sortBy, categories]);
+  }, [urlSlug, selectedBrand, selectedColor, sortBy, categories, productType, origin]);
 
-  const activeCategory = categories.find((c) => c.id === categorySlug);
+  const isOccasion = urlSlug && OCCASIONS[urlSlug];
+  const activeCategory = !isOccasion ? categories.find((c) => c.id === urlSlug) : null;
+
+  // Title logic
+  let pageTitle = "The Archive";
+  let pageSubtitle = "Global Collection";
+  let pageDescription = "";
+
+  if (isOccasion) {
+    pageTitle = OCCASIONS[urlSlug!];
+    pageSubtitle = "Curated For";
+    pageDescription = `Explore our exclusive selection of pieces perfectly suited for ${OCCASIONS[urlSlug!].toLowerCase()}.`;
+  } else if (activeCategory) {
+    pageTitle = activeCategory.name;
+    pageSubtitle = "Institutional Archive";
+    pageDescription = activeCategory.description;
+  }
+
+  if (origin) pageSubtitle += ` • ${origin.toUpperCase()}`;
+  if (productType) pageSubtitle += ` • ${productType.toUpperCase()}S`;
 
   return (
     <Layout>
@@ -87,14 +136,14 @@ const Shop = () => {
           <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
             <div className="flex flex-col items-center text-center">
               <p className="font-sans text-[10px] editorial-spacing text-muted-foreground mb-6 uppercase tracking-[0.3em]">
-                {activeCategory ? "Institutional Archive" : "Global Collection"}
+                {pageSubtitle}
               </p>
               <h1 className="font-serif text-5xl lg:text-8xl font-light text-foreground tracking-tighter capitalize">
-                {activeCategory ? activeCategory.name : "The Archive"}
+                {pageTitle}
               </h1>
-              {activeCategory && (
+              {(pageDescription) && (
                 <p className="font-sans text-[10px] text-muted-foreground mt-8 max-w-xl mx-auto leading-relaxed editorial-spacing font-light uppercase opacity-60">
-                  {activeCategory.description}
+                  {pageDescription}
                 </p>
               )}
             </div>
@@ -107,7 +156,7 @@ const Shop = () => {
             <div className="flex items-center justify-center gap-8 lg:gap-12 overflow-x-auto py-6 scrollbar-none">
               <Link
                 to="/shop"
-                className={`font-sans text-[10px] editorial-spacing whitespace-nowrap transition-all duration-300 pb-1 border-b ${!categorySlug ? "text-foreground border-foreground" : "text-muted-foreground border-transparent hover:text-foreground hover:border-foreground/30"
+                className={`font-sans text-[10px] editorial-spacing whitespace-nowrap transition-all duration-300 pb-1 border-b ${!urlSlug ? "text-foreground border-foreground" : "text-muted-foreground border-transparent hover:text-foreground hover:border-foreground/30"
                   }`}
               >
                 ALL EXHIBITS
@@ -116,7 +165,7 @@ const Shop = () => {
                 <Link
                   key={cat.id}
                   to={`/shop/${cat.id}`}
-                  className={`font-sans text-[10px] editorial-spacing whitespace-nowrap transition-all duration-300 pb-1 border-b ${categorySlug === cat.id ? "text-foreground border-foreground" : "text-muted-foreground border-transparent hover:text-foreground hover:border-foreground/30"
+                  className={`font-sans text-[10px] editorial-spacing whitespace-nowrap transition-all duration-300 pb-1 border-b ${urlSlug === cat.id ? "text-foreground border-foreground" : "text-muted-foreground border-transparent hover:text-foreground hover:border-foreground/30"
                     }`}
                 >
                   {cat.name.toUpperCase()}
@@ -157,6 +206,23 @@ const Shop = () => {
                   </div>
                 </div>
 
+                {/* Occasion Filter */}
+                <div className="space-y-8 pt-12 border-t border-border">
+                  <h3 className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase opacity-40">Occasion</h3>
+                  <div className="flex flex-col gap-4">
+                    {Object.entries(OCCASIONS).map(([slug, name]) => (
+                      <Link
+                        key={slug}
+                        to={`/shop/${slug}`}
+                        className={`text-left font-sans text-[11px] editorial-spacing transition-all ${urlSlug === slug ? "text-foreground font-bold" : "text-muted-foreground hover:text-foreground"
+                          }`}
+                      >
+                        {name.toUpperCase()}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Color Palette filter */}
                 <div className="space-y-8 pt-12 border-t border-border">
                   <h3 className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase opacity-40">Heritage Tones</h3>
@@ -172,99 +238,114 @@ const Shop = () => {
                       <button
                         key={color.value}
                         onClick={() => setSelectedColor(color.value)}
-                        className={`w-full aspect-square border border-border group relative`}
+                        className={`w-full aspect-square border border-border transition-all ${selectedColor === color.value ? "ring-1 ring-offset-2 ring-foreground" : "hover:border-foreground"
+                          }`}
                         style={{ backgroundColor: color.hex }}
                         title={color.name}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Region Filter */}
+                <div className="space-y-8 pt-12 border-t border-border">
+                  <h3 className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase opacity-40">Region</h3>
+                  <div className="flex flex-col gap-4">
+                    <button
+                      onClick={() => {
+                        const newParams = new URLSearchParams(searchParams);
+                        newParams.delete('origin');
+                        setSearchParams(newParams);
+                      }}
+                      className={`text-left font-sans text-[11px] editorial-spacing transition-all ${!origin ? "text-foreground font-bold" : "text-muted-foreground hover:text-foreground"
+                        }`}
+                    >
+                      ALL REGIONS
+                    </button>
+                    {origins.map((originName: any) => (
+                      <button
+                        key={originName}
+                        onClick={() => {
+                          const newParams = new URLSearchParams(searchParams);
+                          newParams.set('origin', originName);
+                          setSearchParams(newParams);
+                        }}
+                        className={`text-left font-sans text-[11px] editorial-spacing transition-all ${origin === originName ? "text-foreground font-bold" : "text-muted-foreground hover:text-foreground"
+                          }`}
                       >
-                        {selectedColor === color.value && (
-                          <div className="absolute inset-0 border-2 border-foreground mix-blend-difference" />
-                        )}
-                        <div className="absolute inset-x-0 -bottom-8 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">
-                          <span className="font-sans text-[7px] editorial-spacing bg-white px-2 py-1 border border-border shadow-sm">{color.name}</span>
-                        </div>
+                        {originName.toUpperCase()}
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Sort Mechanism */}
-                <div className="space-y-8 pt-12 border-t border-border">
-                  <h3 className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase opacity-40">Curation Logic</h3>
-                  <div className="relative group">
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="w-full bg-transparent font-sans text-[11px] editorial-spacing text-foreground outline-none cursor-pointer appearance-none pr-8 py-2 border-b border-border hover:border-foreground transition-all"
-                    >
-                      <option value="featured">EDITORIAL CURATION</option>
-                      <option value="newest">RECENT ARCHIVE</option>
-                      <option value="price-asc">VALUE: LOW TO HIGH</option>
-                      <option value="price-desc">VALUE: HIGH TO LOW</option>
-                    </select>
-                    <ChevronDown className="absolute right-0 top-3 w-3 h-3 text-muted-foreground pointer-events-none group-hover:text-foreground transition-colors" />
-                  </div>
-                </div>
-
-                {/* Aesthetic Guidelines */}
-                <div className="pt-12 border-t border-border">
-                  <p className="font-sans text-[9px] text-muted-foreground italic leading-relaxed uppercase editorial-spacing opacity-50">
-                    Each piece in the MENA ROYAL collection is verified for regional heritage and contemporary artisanal standards.
-                  </p>
-                </div>
               </div>
             </aside>
 
-            {/* Product Gallery */}
-            <div className="lg:col-span-9">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-24">
-                <AnimatePresence mode="popLayout">
-                  {loading ? (
-                    Array.from({ length: 6 }).map((_, i) => (
-                      <div key={i} className="animate-pulse space-y-6">
-                        <div className="aspect-[3/4] bg-secondary/20" />
-                        <div className="h-4 bg-secondary/10 w-2/3" />
-                        <div className="h-3 bg-secondary/10 w-1/3" />
+            {/* Product Grid */}
+            <main className="lg:col-span-9">
+              <div className="flex justify-between items-center mb-8">
+                <span className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase tracking-widest">
+                  {products.length} EXHIBITS FOUND
+                </span>
+
+                <div className="flex items-center gap-4">
+                  <div className="relative group">
+                    <button className="flex items-center gap-2 font-sans text-[10px] editorial-spacing uppercase hover:text-muted-foreground transition-colors">
+                      Sort By <ChevronDown className="w-3 h-3" />
+                    </button>
+                    <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 w-40">
+                      <div className="bg-background border border-border p-2 shadow-lg">
+                        <button onClick={() => setSortBy('featured')} className="block w-full text-left px-3 py-2 text-[10px] hover:bg-secondary/10 uppercase editorial-spacing">Featured</button>
+                        <button onClick={() => setSortBy('newest')} className="block w-full text-left px-3 py-2 text-[10px] hover:bg-secondary/10 uppercase editorial-spacing">Newest</button>
+                        <button onClick={() => setSortBy('price-asc')} className="block w-full text-left px-3 py-2 text-[10px] hover:bg-secondary/10 uppercase editorial-spacing">Price: Low to High</button>
+                        <button onClick={() => setSortBy('price-desc')} className="block w-full text-left px-3 py-2 text-[10px] hover:bg-secondary/10 uppercase editorial-spacing">Price: High to Low</button>
                       </div>
-                    ))
-                  ) : (
-                    products.map((product, index) => (
-                      <ProductCard key={product.id} product={product} index={index} />
-                    ))
-                  )}
-                </AnimatePresence>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {!loading && products.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-60 border border-dashed border-border flex flex-col items-center justify-center bg-secondary/5"
-                >
-                  <p className="font-serif text-2xl italic text-muted-foreground mb-8">No heritage pieces found in the selected archive.</p>
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i} className="aspect-[3/4] bg-secondary/10 animate-pulse" />
+                  ))}
+                </div>
+              ) : products.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                  <AnimatePresence>
+                    {products.map((product) => (
+                      <motion.div
+                        key={product.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <ProductCard product={product} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <div className="py-24 text-center border border-dashed border-border">
+                  <p className="font-serif text-2xl text-muted-foreground mb-4">No exhibits found</p>
                   <button
-                    onClick={() => { setSelectedBrand("all"); navigate("/shop"); }}
-                    className="font-sans text-[10px] editorial-spacing text-foreground border-b border-foreground pb-1 hover:opacity-60 transition-opacity"
+                    onClick={() => {
+                      navigate('/shop');
+                      setSelectedBrand('all');
+                      setSelectedColor('all');
+                      const newParams = new URLSearchParams();
+                      setSearchParams(newParams);
+                    }}
+                    className="font-sans text-xs editorial-spacing underline uppercase"
                   >
-                    RESET DISCOVERY
-                  </button>
-                </motion.div>
-              )}
-
-              {/* Counter */}
-              {!loading && products.length > 0 && (
-                <div className="mt-40 pt-16 border-t border-border flex justify-between items-center text-muted-foreground">
-                  <p className="font-sans text-[9px] editorial-spacing uppercase">
-                    ARCHIVE COUNT: {products.length} EXHIBITS
-                  </p>
-                  <button
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className="font-sans text-[9px] editorial-spacing hover:text-foreground transition-all border-b border-transparent hover:border-foreground pb-1"
-                  >
-                    BACK TO TOP
+                    Clear All Filters
                   </button>
                 </div>
               )}
-            </div>
+            </main>
           </div>
         </div>
       </div>

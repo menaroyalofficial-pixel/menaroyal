@@ -92,12 +92,25 @@ export const productService = {
     },
 
     /**
-     * PUBLIC: Fetch all products with optional filters.
+     * PUBLIC: Fetch all products with extended filters.
      */
-    async getProducts(filters: { categoryId?: string, brandId?: string, sortBy?: string }) {
+    async getProducts(filters: {
+        categoryId?: string,
+        brandId?: string,
+        sortBy?: string,
+        productType?: string,
+        occasion?: string,
+        origin?: string
+    }) {
         let query = supabase
             .from('products')
-            .select('*, brands(name)');
+            .select(`
+                *,
+                brands!inner (
+                    name,
+                    origin_country
+                )
+            `);
 
         if (filters.categoryId && filters.categoryId !== 'all') {
             query = query.eq('category_id', filters.categoryId);
@@ -107,15 +120,47 @@ export const productService = {
             query = query.eq('brand_id', filters.brandId);
         }
 
-        switch (filters.sortBy) {
-            case 'price-asc': query = query.order('price', { ascending: true }); break;
-            case 'price-desc': query = query.order('price', { ascending: false }); break;
-            case 'newest': query = query.order('created_at', { ascending: false }); break;
-            default: query = query.order('featured', { ascending: false }); break;
+        if (filters.productType) {
+            query = query.eq('product_type', filters.productType);
         }
+
+        if (filters.occasion) {
+            query = query.contains('occasion_tags', [filters.occasion]);
+        }
+
+        if (filters.origin) {
+            // Filter by brand origin (requires !inner join above)
+            query = query.eq('brands.origin_country', filters.origin);
+        }
+
+        let orderColumn = 'featured';
+        let orderAscending = false;
+
+        switch (filters.sortBy) {
+            case 'price-asc':
+                orderColumn = 'price';
+                orderAscending = true;
+                break;
+            case 'price-desc':
+                orderColumn = 'price';
+                orderAscending = false;
+                break;
+            case 'newest':
+                orderColumn = 'created_at';
+                orderAscending = false;
+                break;
+            default:
+                orderColumn = 'featured';
+                orderAscending = false;
+                break;
+        }
+
+        query = query.order(orderColumn, { ascending: orderAscending });
 
         const { data, error } = await query;
         if (error) throw error;
+
+        // Transform data to flatten brand name if needed, or keeping structure
         return data;
     },
 
