@@ -27,6 +27,7 @@ import Checkout from "./pages/Checkout";
 import Legal from "./pages/Legal";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
+import Waitlist from "./pages/Waitlist";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/layout/ScrollToTop";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -81,6 +82,7 @@ const App = () => (
               <Route path="/apply" element={<Apply />} />
               <Route path="/about" element={<About />} />
               <Route path="/faq" element={<FAQ />} />
+              <Route path="/join" element={<Waitlist />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

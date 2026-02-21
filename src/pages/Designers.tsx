@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { brandService } from "@/services/brandService";
@@ -6,7 +6,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const Designers = () => {
   const [brands, setBrands] = useState<any[]>([]);
+  const [filteredBrands, setFilteredBrands] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+  const origin = searchParams.get("origin");
 
   useEffect(() => {
     const fetchBrands = async () => {
@@ -21,6 +24,17 @@ const Designers = () => {
     };
     fetchBrands();
   }, []);
+
+  useEffect(() => {
+    if (origin) {
+      setFilteredBrands(brands.filter(b =>
+        (b.origin_country && b.origin_country.toLowerCase() === origin.toLowerCase()) ||
+        (b.country && b.country.toLowerCase() === origin.toLowerCase())
+      ));
+    } else {
+      setFilteredBrands(brands);
+    }
+  }, [origin, brands]);
 
   return (
     <Layout>
@@ -52,7 +66,7 @@ const Designers = () => {
           ) : (
             <div className="space-y-48">
               <AnimatePresence>
-                {brands.map((brand, index) => (
+                {filteredBrands.map((brand, index) => (
                   <motion.div
                     key={brand.id}
                     initial={{ opacity: 0, y: 40 }}

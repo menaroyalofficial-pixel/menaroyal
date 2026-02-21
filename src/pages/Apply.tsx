@@ -86,7 +86,7 @@ const Apply = () => {
                             </div>
                             <div className="pt-12 border-t border-border">
                                 <p className="font-sans text-[9px] editorial-spacing text-muted-foreground mb-4">INQUIRIES</p>
-                                <p className="font-serif text-xl font-light">archive@menaluxe.com</p>
+                                <p className="font-serif text-xl font-light">archive@menaroyal.com</p>
                             </div>
                         </div>
 
