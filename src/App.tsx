@@ -82,7 +82,7 @@ const App = () => (
               <Route path="/apply" element={<Apply />} />
               <Route path="/about" element={<About />} />
               <Route path="/faq" element={<FAQ />} />
-              <Route path="/join" element={<Waitlist />} />
+              <Route path="/waitlist" element={<Waitlist />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

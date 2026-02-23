@@ -32,10 +32,13 @@ const ProductDetail = () => {
         setProduct(data);
 
         if (data) {
-          const related = await productService.getProducts({
+          // Dynamic SEO Title
+          document.title = `${data.name} | MENA ROYAL — Institutional Archive`;
+
+          const { products: related } = await productService.getProducts({
             categoryId: data.category_id
           });
-          setRelatedProducts(related?.filter(p => p.id !== data.id).slice(0, 4) || []);
+          setRelatedProducts(related?.filter((p: any) => p.id !== data.id).slice(0, 4) || []);
         }
       } catch (error) {
         console.error("Archive Detail Fetch Error:", error);
@@ -45,6 +48,10 @@ const ProductDetail = () => {
       }
     };
     fetchProduct();
+
+    return () => {
+      document.title = "MENA ROYAL — The Authority on MENA Design";
+    };
   }, [slug]);
 
   if (loading) {
@@ -159,7 +166,7 @@ const ProductDetail = () => {
                     {product.name}
                   </h1>
                   <p className="font-sans text-2xl font-light text-foreground/60 tracking-tighter">
-                    ${product.price}
+                    $ {product.price?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </p>
                 </div>
 

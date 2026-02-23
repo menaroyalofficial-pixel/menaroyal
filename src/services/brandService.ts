@@ -39,27 +39,35 @@ export const brandService = {
      * Add a new email to the newsletter subscribers and send welcome email.
      */
     async subscribeToJournal(email: string) {
+        const cleanEmail = email.toLowerCase().trim();
+
         const { error } = await supabase
             .from('subscribers')
-            .insert([{ email }]);
+            .insert([{ email: cleanEmail }]);
 
-        if (error) throw error;
+        if (error) {
+            if (error.code === '23505') return true; // Already exists, return true to show success anyway
+            throw error;
+        }
 
-        // "Journal Archival": Send the welcome email
-        await supabase.functions.invoke('send-email', {
-            body: {
-                to: email,
-                subject: "Welcome to the MENA ROYAL Journal",
-                html: `
-                    <div style="font-family: serif; max-width: 600px; padding: 40px; border: 1px solid #eee;">
-                        <h1 style="font-weight: 300;">The <span style="font-style: italic;">Journal</span></h1>
-                        <p style="font-family: sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;">Institutional Subscription Confirmed</p>
-                        <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;" />
-                        <p style="font-size: 16px; line-height: 1.6;">Welcome to the MENA ROYAL collective archive. You will now receive seasonal curations from our heritage houses.</p>
-                    </div>
-                `
-            }
-        });
+        // Send the welcome email (async invokation)
+        try {
+            await supabase.functions.invoke('send-email', {
+                body: {
+                    to: cleanEmail,
+                    subject: "Welcome to the MENA ROYAL Journal",
+                    html: `
+                        <div style="font-family: serif; max-width: 600px; padding: 40px; border: 1px solid #eee;">
+                            <h1 style="font-weight: 300;">The <span style="font-style: italic;">Journal</span></h1>
+                            <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;" />
+                            <p>Confirming your institutional subscription to the MENA ROYAL collective archive.</p>
+                        </div>
+                    `
+                }
+            });
+        } catch (e) {
+            console.warn("Newsletter welcome email delayed:", e);
+        }
 
         return true;
     },

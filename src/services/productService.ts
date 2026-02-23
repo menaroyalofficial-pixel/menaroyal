@@ -100,8 +100,15 @@ export const productService = {
         sortBy?: string,
         productType?: string,
         occasion?: string,
-        origin?: string
+        origin?: string,
+        page?: number,
+        pageSize?: number
     }) {
+        const page = filters.page || 1;
+        const pageSize = filters.pageSize || 24;
+        const from = (page - 1) * pageSize;
+        const to = from + pageSize - 1;
+
         let query = supabase
             .from('products')
             .select(`
@@ -110,7 +117,7 @@ export const productService = {
                     name,
                     origin_country
                 )
-            `);
+            `, { count: 'exact' });
 
         if (filters.categoryId && filters.categoryId !== 'all') {
             query = query.eq('category_id', filters.categoryId);
@@ -129,7 +136,6 @@ export const productService = {
         }
 
         if (filters.origin) {
-            // Filter by brand origin (requires !inner join above)
             query = query.eq('brands.origin_country', filters.origin);
         }
 
@@ -155,13 +161,14 @@ export const productService = {
                 break;
         }
 
-        query = query.order(orderColumn, { ascending: orderAscending });
+        query = query
+            .order(orderColumn, { ascending: orderAscending })
+            .range(from, to);
 
-        const { data, error } = await query;
+        const { data, error, count } = await query;
         if (error) throw error;
 
-        // Transform data to flatten brand name if needed, or keeping structure
-        return data;
+        return { products: data || [], total: count || 0 };
     },
 
     /**

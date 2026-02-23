@@ -18,13 +18,16 @@ const SearchOverlay = ({ isOpen, onClose }: SearchOverlayProps) => {
         const performSearch = async () => {
             setLoading(true);
             try {
-                // Fetch all products for the search context
-                const allProducts = await productService.getProducts({ sortBy: 'newest' });
+                // Fetch all products for the search context (Big App optimized: fetching a reasonable slice)
+                const { products: fetchedProducts } = await productService.getProducts({
+                    sortBy: 'newest',
+                    pageSize: 50 // Limit initial search context for performance
+                });
 
                 if (query.trim() === "") {
-                    setResults(allProducts.slice(0, 8));
+                    setResults(fetchedProducts.slice(0, 8));
                 } else {
-                    const filtered = allProducts.filter((p: any) => {
+                    const filtered = fetchedProducts.filter((p: any) => {
                         const brandName = p.brands?.name?.toLowerCase() || "";
                         const productName = p.name.toLowerCase();
                         const searchTerm = query.toLowerCase();

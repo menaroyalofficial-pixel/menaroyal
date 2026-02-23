@@ -14,16 +14,29 @@ const BrandPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBrandData = async () => {
+    const fetchBrandData = async (isLoadMore = false) => {
       if (!slug) return;
-      setLoading(true);
+      if (!isLoadMore) setLoading(true);
+
       try {
         const brandData = await brandService.getBrandBySlug(slug);
         setBrand(brandData);
 
         if (brandData) {
-          const brandProducts = await productService.getProducts({ brandId: brandData.id });
-          setProducts(brandProducts || []);
+          // Dynamic SEO Title
+          document.title = `${brandData.name} | MENA ROYAL — Institutional Archive`;
+
+          const { products: fetchedProducts } = await productService.getProducts({
+            brandId: brandData.id,
+            page: isLoadMore ? Math.floor(products.length / 24) + 1 : 1,
+            pageSize: 24
+          });
+
+          if (isLoadMore) {
+            setProducts(prev => [...prev, ...fetchedProducts]);
+          } else {
+            setProducts(fetchedProducts || []);
+          }
         }
       } catch (error) {
         console.error("Archive House Fetch Error:", error);
@@ -32,6 +45,10 @@ const BrandPage = () => {
       }
     };
     fetchBrandData();
+
+    return () => {
+      document.title = "MENA ROYAL — The Authority on MENA Design";
+    };
   }, [slug]);
 
   if (loading) {
