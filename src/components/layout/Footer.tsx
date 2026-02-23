@@ -80,6 +80,7 @@ const Footer = () => {
                 { label: "FAQ", href: "/faq" },
                 { label: "The Houses", href: "/designers" },
                 { label: "The Journal", href: "/stories" },
+                { label: "Archive Access", href: "/waitlist" },
                 { label: "Global Shipping", href: "/shipping" },
                 { label: "Collective Intake", href: "/apply" },
                 { label: "Designer Atelier", href: "/designer/login" },
