@@ -79,7 +79,7 @@ const Footer = () => {
                 { label: "About Us", href: "/about" },
                 { label: "FAQ", href: "/faq" },
                 { label: "The Houses", href: "/designers" },
-                { label: "The Journal", href: "/stories" },
+                { label: "Editorial", href: "/editorial" },
                 { label: "Archive Access", href: "/waitlist" },
                 { label: "Global Shipping", href: "/shipping" },
                 { label: "Collective Intake", href: "/apply" },

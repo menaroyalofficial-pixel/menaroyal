@@ -16,7 +16,7 @@ const navLinks = [
   // TEMPORARY: Maison hidden - uncomment to reactivate
   // { label: "Maison", href: "/shop/maison" },
   { label: "Jewelry", href: "/shop/jewelry" },
-  { label: "Stories", href: "/stories" },
+  { label: "Editorial", href: "/editorial" },
   { label: "The Houses", href: "/designers" },
 ];
 
@@ -123,11 +123,11 @@ const Header = () => {
                 Designers
               </button>
               <Link
-                to="/stories"
+                to="/editorial"
                 className={`text-[10px] font-sans font-medium editorial-spacing transition-all duration-300 hover:opacity-100 ${subTextColor} hover:text-foreground uppercase tracking-widest`}
                 onMouseEnter={() => setActiveMenu(null)}
               >
-                Stories
+                Editorial
               </Link>
             </nav>
           </div>

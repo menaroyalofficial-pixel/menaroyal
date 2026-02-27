@@ -58,8 +58,8 @@ const App = () => (
                   <Account />
                 </ProtectedRoute>
               } />
-              <Route path="/stories" element={<Stories />} />
-              <Route path="/stories/:id" element={<StoryDetail />} />
+              <Route path="/editorial" element={<Stories />} />
+              <Route path="/editorial/:id" element={<StoryDetail />} />
               <Route path="/shipping" element={<Shipping />} />
               <Route path="/onboarding/:slug" element={<Onboarding />} />
               <Route path="/login" element={<Login />} />

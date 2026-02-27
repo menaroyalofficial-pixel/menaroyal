@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
-import { ArrowLeft, RefreshCcw } from "lucide-react";
+import { ArrowLeft, RefreshCcw, Heart, ShoppingBag } from "lucide-react";
 import { storyService, Story } from "@/services/storyService";
+import { productService } from "@/services/productService";
 
-const StoryDetail = () => {
+const EditorialDetail = () => {
     const { id } = useParams<{ id: string }>();
     const [article, setArticle] = useState<Story | null>(null);
+    const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -19,6 +21,10 @@ const StoryDetail = () => {
         try {
             const data = await storyService.getStoryById(id!);
             setArticle(data);
+
+            // Fetch a few products for the "Curated Archive" inline section
+            const { products } = await productService.getProducts({ pageSize: 3 });
+            setRelatedProducts(products);
         } catch (error) {
             console.error(error);
         } finally {
@@ -28,7 +34,7 @@ const StoryDetail = () => {
 
     if (loading) return (
         <Layout>
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <RefreshCcw className="w-8 h-8 animate-spin opacity-20" />
             </div>
         </Layout>
@@ -36,91 +42,128 @@ const StoryDetail = () => {
 
     if (!article) return (
         <Layout>
-            <div className="min-h-screen bg-background flex flex-col items-center justify-center space-y-8">
+            <div className="min-h-screen bg-white flex flex-col items-center justify-center space-y-8">
                 <p className="font-serif text-2xl italic text-muted-foreground">Archive entry not found.</p>
-                <Link to="/stories" className="font-sans text-[10px] editorial-spacing border-b border-black">Return Home</Link>
+                <Link to="/editorial" className="font-sans text-[10px] editorial-spacing border-b border-black uppercase">Return to Index</Link>
             </div>
         </Layout>
     );
 
     return (
         <Layout>
-            <div className="bg-background min-h-screen">
-                <div className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-32">
-                    <Link to="/stories" className="group flex items-center gap-4 font-sans text-[10px] editorial-spacing text-muted-foreground hover:text-foreground transition-all">
-                        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-2" />
-                        RETURN TO ARCHIVE
-                    </Link>
+            <div className="bg-white min-h-screen selection:bg-black selection:text-white pb-32">
+                {/* Cinematic Header — No Image First */}
+                <header className="pt-48 lg:pt-64 max-w-[1440px] mx-auto px-6 lg:px-12 text-center mb-32">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1.5 }}
+                        className="space-y-12"
+                    >
+                        <p className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase tracking-[0.5em]">
+                            {article.category} // {article.read_time}
+                        </p>
+                        <h1 className="font-serif text-6xl lg:text-[9rem] font-light leading-[0.85] tracking-tighter text-black uppercase italic">
+                            {article.title}
+                        </h1>
+                        <p className="font-sans text-xs lg:text-sm text-muted-foreground uppercase tracking-[0.3em] font-light max-w-2xl mx-auto leading-relaxed editorial-spacing">
+                            {article.subtitle}
+                        </p>
+                    </motion.div>
+                </header>
+
+                <div className="max-w-[1440px] mx-auto px-6 lg:px-12 mb-32">
+                    <div className="aspect-[21/9] overflow-hidden bg-secondary relative">
+                        <motion.img
+                            initial={{ scale: 1.1, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ duration: 1.5 }}
+                            src={article.image}
+                            alt={article.title}
+                            className="w-full h-full object-cover grayscale contrast-125 brightness-95"
+                        />
+                    </div>
                 </div>
 
-                <article className="max-w-[1440px] mx-auto px-6 lg:px-12 py-16 lg:py-32">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
-                        <div className="lg:col-span-3 space-y-12">
+                {/* Editorial Body */}
+                <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
+                        {/* Meta Sidebar */}
+                        <div className="lg:col-span-3 lg:sticky lg:top-48 space-y-16 py-8 border-t border-black/5">
                             <div className="space-y-4">
-                                <p className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase">Category</p>
-                                <p className="font-serif text-xl italic font-light">{article.category}</p>
+                                <p className="font-sans text-[8px] editorial-spacing text-muted-foreground uppercase tracking-[0.3em]">Institutional Record No.</p>
+                                <p className="font-sans text-[11px] tracking-widest">{article.id.substring(0, 8).toUpperCase()}</p>
                             </div>
                             <div className="space-y-4">
-                                <p className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase">Read Time</p>
-                                <p className="font-sans text-[11px] editorial-spacing">{article.read_time.toUpperCase()}</p>
+                                <p className="font-sans text-[8px] editorial-spacing text-muted-foreground uppercase tracking-[0.3em]">Date of Entry</p>
+                                <p className="font-sans text-[11px] tracking-widest">{new Date(article.created_at).toLocaleDateString()}</p>
                             </div>
-                            <div className="pt-12 border-t border-border">
-                                <p className="font-sans text-[9px] editorial-spacing text-muted-foreground mb-4">SHARE ARCHIVE</p>
-                                <div className="flex gap-4">
-                                    {["TW", "IG", "FB"].map(s => (
-                                        <span key={s} className="font-sans text-[10px] editorial-spacing text-foreground/40 hover:text-foreground cursor-pointer transition-colors">{s}</span>
-                                    ))}
-                                </div>
+                            <div className="space-y-4 pt-12 border-t border-black/5">
+                                <p className="font-sans text-[8px] editorial-spacing text-muted-foreground uppercase tracking-[0.3em]">Contributors</p>
+                                <p className="font-serif text-lg italic">MENA ROYAL <br /> COLLECTIVE</p>
                             </div>
                         </div>
 
-                        <div className="lg:col-span-9 space-y-24">
-                            <header className="space-y-12">
-                                <div className="space-y-6">
-                                    <p className="font-sans text-[10px] editorial-spacing text-muted-foreground uppercase tracking-[0.4em]">Journal Entry</p>
-                                    <h1 className="font-serif text-5xl lg:text-8xl font-light text-foreground tracking-tighter leading-tight">
-                                        {article.title}
-                                    </h1>
-                                </div>
-                                <p className="font-serif text-2xl lg:text-3xl italic font-light text-foreground/60 leading-relaxed max-w-2xl">
-                                    "{article.subtitle}"
-                                </p>
-                            </header>
+                        {/* Content Body */}
+                        <div className="lg:col-span-1" />
 
-                            <div className="aspect-[21/9] overflow-hidden bg-secondary relative">
-                                <motion.img
-                                    initial={{ scale: 1.1 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ duration: 1.5, ease: "easeOut" }}
-                                    src={article.image}
-                                    alt={article.title}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-
-                            <div className="max-w-3xl">
-                                <div className="font-sans text-lg lg:text-xl text-foreground/80 leading-relaxed font-light first-letter:text-7xl first-letter:font-serif first-letter:mr-4 first-letter:float-left first-letter:text-foreground whitespace-pre-line prose-serif prose-lg">
+                        <div className="lg:col-span-7 py-8 border-t border-black/5">
+                            <article className="prose-editorial">
+                                <div className="font-sans text-lg lg:text-2xl text-black/80 leading-[1.8] font-light first-letter:text-[10rem] first-letter:font-serif first-letter:mr-6 first-letter:float-left first-letter:text-black first-letter:leading-[0.85] first-letter:italic whitespace-pre-line mb-24">
                                     {article.content}
                                 </div>
-                            </div>
 
-                            <footer className="pt-24 border-t border-border">
-                                <div className="flex items-center justify-between">
-                                    <div className="space-y-2">
-                                        <p className="font-sans text-[9px] editorial-spacing text-muted-foreground">CONTRIBUTOR</p>
-                                        <p className="font-serif text-xl font-light">MENA ROYAL Collective</p>
+                                {/* Pull Quote Example (Simulated since DB might not have one) */}
+                                <blockquote className="my-24 py-12 border-t border-b border-black/5 text-center px-12">
+                                    <p className="font-serif text-3xl lg:text-5xl italic font-light tracking-tighter text-black leading-tight">
+                                        "Craftsmanship is the only language that honors heritage without needing a translator."
+                                    </p>
+                                </blockquote>
+
+                                {/* Editorial to Commerce: The Curated Archive */}
+                                <div className="my-32 pt-24 border-t border-black/5">
+                                    <p className="font-sans text-[9px] editorial-spacing text-muted-foreground uppercase tracking-[0.4em] mb-12 text-center">Reference Archives</p>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                                        {relatedProducts.map(product => (
+                                            <Link to={`/product/${product.slug}`} key={product.id} className="group">
+                                                <div className="aspect-[3/4] overflow-hidden mb-6 bg-secondary/10">
+                                                    <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover grayscale brightness-95 group-hover:scale-105 transition-transform duration-700" />
+                                                </div>
+                                                <div className="text-center space-y-2">
+                                                    <p className="font-sans text-[8px] uppercase tracking-widest text-muted-foreground">{product.brands?.name}</p>
+                                                    <h4 className="font-serif text-sm font-light uppercase group-hover:italic transition-all">{product.name}</h4>
+                                                </div>
+                                            </Link>
+                                        ))}
                                     </div>
-                                    <Link to="/stories" className="font-sans text-[10px] editorial-spacing border border-foreground px-8 py-4 hover:bg-black hover:text-white transition-all">
-                                        RETURN TO CONCIERGE
-                                    </Link>
+                                    <div className="mt-16 text-center">
+                                        <Link to="/shop" className="font-sans text-[10px] editorial-spacing border-b border-black pb-1 hover:opacity-50 transition-all uppercase tracking-widest">
+                                            View Full Archive
+                                        </Link>
+                                    </div>
                                 </div>
-                            </footer>
+                            </article>
                         </div>
                     </div>
-                </article>
+                </div>
+
+                {/* Footer Navigation */}
+                <footer className="mt-48 max-w-[1440px] mx-auto px-6 lg:px-12">
+                    <div className="pt-24 border-t border-black/5 flex flex-col md:flex-row items-center justify-between gap-12">
+                        <Link to="/editorial" className="font-sans text-[10px] editorial-spacing hover:opacity-50 transition-all uppercase tracking-[0.3em]">
+                            ← Back to Archive Index
+                        </Link>
+                        <p className="font-sans text-[8px] text-muted-foreground uppercase tracking-[0.4em]">
+                            MENA ROYAL INSTITUTIONAL DISPATCH // 2026
+                        </p>
+                    </div>
+                </footer>
             </div>
+
+            {/* Global Restraint Frame */}
+            <div className="fixed inset-0 pointer-events-none border-[40px] border-white z-[100] hidden lg:block opacity-50" />
         </Layout>
     );
 };
 
-export default StoryDetail;
+export default EditorialDetail;
