@@ -1,17 +1,22 @@
 import { supabase } from "@/lib/supabase";
+import { z } from "zod";
 
-export interface Story {
-    id: string;
-    title: string;
-    subtitle: string;
-    excerpt: string;
-    content: string;
-    image: string;
-    category: string;
-    read_time: string;
-    published: boolean;
-    created_at: string;
-}
+export const StorySchema = z.object({
+    id: z.string().uuid(),
+    slug: z.string(),
+    title: z.string(),
+    subtitle: z.string().optional().nullable(),
+    excerpt: z.string().optional().nullable(),
+    content: z.string(),
+    image: z.string(),
+    category: z.string(),
+    read_time: z.string(),
+    published: z.boolean(),
+    product_tags: z.array(z.string()).optional().nullable(),
+    created_at: z.string()
+});
+
+export type Story = z.infer<typeof StorySchema>;
 
 export const storyService = {
     /**
@@ -28,21 +33,21 @@ export const storyService = {
             console.error("Archival Retrieval Error:", error);
             return [];
         }
-        return data as Story[];
+        return (data || []).map(item => StorySchema.parse(item));
     },
 
     /**
-     * Fetch a single journal entry by ID.
+     * Fetch a single journal entry by Slug.
      */
-    async getStoryById(id: string) {
+    async getStoryBySlug(slug: string) {
         const { data, error } = await supabase
             .from('stories')
             .select('*')
-            .eq('id', id)
+            .eq('slug', slug)
             .single();
 
         if (error) throw error;
-        return data as Story;
+        return StorySchema.parse(data);
     },
 
     /**

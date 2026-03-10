@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { emailService } from "@/services/emailService";
 
 const Waitlist = () => {
     const [email, setEmail] = useState("");
@@ -31,6 +32,9 @@ const Waitlist = () => {
                 }
                 throw supabaseError;
             }
+
+            // Dispatch Institutional Confirmation Email
+            await emailService.sendWaitlistConfirmation(email.toLowerCase().trim());
 
             setSubmitted(true);
         } catch (err: any) {

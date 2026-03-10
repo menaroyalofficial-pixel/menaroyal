@@ -233,5 +233,43 @@ export const emailService = {
       });
       return !error;
     } catch (error) { return false; }
+  },
+
+  /**
+   * Send a confirmation email for institutional waitlist requests.
+   */
+  async sendWaitlistConfirmation(toEmail: string) {
+    try {
+      const { error } = await supabase.functions.invoke('send-email', {
+        body: {
+          to: toEmail,
+          subject: "Archival Access Request Received | MENA ROYAL",
+          html: `
+            <div style="font-family: serif; max-width: 600px; margin: 0 auto; padding: 60px; border: 1px solid #000; text-align: center;">
+              <h1 style="color: #000; font-weight: 300; letter-spacing: 8px; font-size: 28px; text-transform: uppercase; margin-bottom: 40px;">MENA ROYAL</h1>
+              <p style="font-family: sans-serif; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #999; margin-bottom: 60px;">Institutional Archive</p>
+              
+              <div style="margin: 40px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 40px 0;">
+                <h2 style="font-weight: 300; font-style: italic; font-size: 32px; letter-spacing: -1px; line-height: 1.2;">
+                   Correspondence <br /><span style="color: #666;">Logged</span>
+                </h2>
+                <p style="font-family: sans-serif; font-size: 13px; line-height: 2; color: #333; margin: 30px 0; max-width: 400px; margin-left: auto; margin-right: auto; text-transform: uppercase; letter-spacing: 1px;">
+                  Your request for archival access has been successfully received by the MENA ROYAL collective.
+                </p>
+              </div>
+
+              <p style="font-family: sans-serif; font-size: 11px; line-height: 1.8; color: #666; margin: 40px 0;">
+                Our curators are currently reviewing the heritage queue. You will receive an invitation once the next tier of archival slots opens for your territory.
+              </p>
+              
+              <p style="font-size: 10px; color: #000; font-family: sans-serif; margin-top: 80px; letter-spacing: 2px; text-transform: uppercase;">
+                MENA ROYAL | Private Archive Access
+              </p>
+            </div>
+          `,
+        },
+      });
+      return !error;
+    } catch (error) { return false; }
   }
 };

@@ -33,7 +33,7 @@ const EditorialSection = () => {
             Stories & <span className="italic text-muted-foreground/40">Craft</span>
           </h2>
         </div>
-        <Link to="/stories" className="flex items-center gap-2 font-sans text-[10px] uppercase editorial-spacing text-muted-foreground hover:text-foreground transition-colors border-b border-transparent hover:border-black">
+        <Link to="/editorial" className="flex items-center gap-2 font-sans text-[10px] uppercase editorial-spacing text-muted-foreground hover:text-foreground transition-colors border-b border-transparent hover:border-black">
           Examine Archive <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
@@ -49,7 +49,7 @@ const EditorialSection = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
           {stories.map((article, index) => (
-            <Link to={`/stories/${article.id}`} key={article.id}>
+            <Link to={`/editorial/${article.slug}`} key={article.id}>
               <motion.article
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}

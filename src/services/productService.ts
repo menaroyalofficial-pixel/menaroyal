@@ -199,5 +199,19 @@ export const productService = {
 
         if (error) throw error;
         return data;
+    },
+
+    /**
+     * PUBLIC: Fetch multiple products by their IDs.
+     */
+    async getProductsByIds(ids: string[]) {
+        if (!ids || ids.length === 0) return [];
+        const { data, error } = await supabase
+            .from('products')
+            .select('*, brands(name)')
+            .in('id', ids);
+
+        if (error) throw error;
+        return data || [];
     }
 };
