@@ -79,6 +79,26 @@ const AdminDashboard = () => {
         } catch (error) { toast.error("Destruction failed."); }
     };
 
+    const handleApproveApplication = async (app: any) => {
+        try {
+            await brandService.updateApplicationStatus(app.id, 'approved');
+            await brandService.createBrandFromApplication(app.company_name, app.email);
+            await emailService.sendApprovalEmail(app.email, app.company_name, app.company_name.toLowerCase().replace(/\s+/g, '-'));
+            toast.success("Application approved and onboarding email sent.");
+            fetchAllData();
+        } catch (error) { toast.error("Error approving application."); }
+    };
+
+    const handleDeclineApplication = async (app: any) => {
+        if (!confirm(`Are you sure you want to decline ${app.company_name}?`)) return;
+        try {
+            await brandService.updateApplicationStatus(app.id, 'rejected');
+            await emailService.sendRejectionEmail(app.email, app.company_name);
+            toast.success("Application declined.");
+            fetchAllData();
+        } catch (error) { toast.error("Error declining application."); }
+    };
+
     const renderOverview = () => (
         <div className="space-y-12">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -213,8 +233,8 @@ const AdminDashboard = () => {
                             <p className="font-sans text-[10px] uppercase font-bold">{app.status}</p>
                             {app.status === 'received' && (
                                 <div className="flex gap-4">
-                                    <button className="px-6 py-3 border border-border font-sans text-[9px] uppercase hover:bg-neutral-50">Decline</button>
-                                    <button className="px-6 py-3 bg-black text-white font-sans text-[9px] uppercase hover:bg-neutral-800">Archive House</button>
+                                    <button onClick={() => handleDeclineApplication(app)} className="px-6 py-3 border border-border font-sans text-[9px] uppercase hover:bg-neutral-50">Decline</button>
+                                    <button onClick={() => handleApproveApplication(app)} className="px-6 py-3 bg-black text-white font-sans text-[9px] uppercase hover:bg-neutral-800">Archive House</button>
                                 </div>
                             )}
                         </div>
