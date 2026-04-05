@@ -51,8 +51,8 @@ const EditorialDetail = () => {
         return content.split('\n\n').map((paragraph, index) => {
             if (paragraph.startsWith('>')) {
                 return (
-                    <blockquote key={index} className="my-24 py-12 border-t border-b border-[#99815D]/20 text-center px-6 lg:px-12">
-                        <p className="font-serif text-3xl lg:text-5xl italic font-light tracking-tighter text-black leading-tight">
+                    <blockquote key={index} className="my-12 lg:my-24 py-12 border-t border-b border-[#99815D]/20 text-center px-6 lg:px-12">
+                        <p className="font-serif text-3xl md:text-4xl lg:text-5xl italic font-light tracking-tighter text-black leading-tight">
                             "{paragraph.replace('>', '').trim()}"
                         </p>
                     </blockquote>
@@ -62,7 +62,7 @@ const EditorialDetail = () => {
                 <p key={index} className="font-sans text-lg lg:text-xl text-black/80 leading-[1.8] font-light mb-12 last:mb-0">
                     {index === 0 ? (
                         <>
-                            <span className="text-[10rem] font-serif mr-6 float-left text-black leading-[0.85] italic">
+                            <span className="text-6xl md:text-8xl lg:text-[8rem] font-serif mr-6 float-left text-black leading-[0.85] italic">
                                 {paragraph.charAt(0)}
                             </span>
                             {paragraph.slice(1)}
@@ -75,7 +75,7 @@ const EditorialDetail = () => {
 
     return (
         <Layout>
-            <div className="bg-white min-h-screen selection:bg-black selection:text-white">
+            <div className="bg-white min-h-screen selection:bg-black selection:text-white overflow-x-hidden">
                 {/* Back Link */}
                 <div className="fixed top-32 left-8 lg:left-12 z-20">
                     <Link to="/editorial" className="group flex items-center gap-4 font-sans text-[9px] tracking-[0.4em] text-black opacity-30 hover:opacity-100 transition-all uppercase">
@@ -107,7 +107,7 @@ const EditorialDetail = () => {
                             transition={{ duration: 1.5, delay: 0.8 }}
                             className="max-w-6xl space-y-12"
                         >
-                            <h1 className="font-serif text-6xl lg:text-[11rem] font-light leading-[0.85] tracking-tighter uppercase italic">
+                            <h1 className="font-serif text-4xl md:text-6xl lg:text-[8rem] font-light leading-[0.85] tracking-tighter uppercase italic">
                                 {story.title}
                             </h1>
                         </motion.div>
@@ -196,9 +196,6 @@ const EditorialDetail = () => {
                     </div>
                 </footer>
             </div>
-
-            {/* Design Restraint Frame */}
-            <div className="fixed inset-0 pointer-events-none border-[30px] border-white z-[100] hidden lg:block opacity-40" />
         </Layout>
     );
 };

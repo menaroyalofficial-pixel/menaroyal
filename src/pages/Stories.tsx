@@ -35,7 +35,7 @@ const Editorial = () => {
 
   return (
     <Layout>
-      <div className="bg-white min-h-screen selection:bg-black selection:text-white pb-32">
+      <div className="bg-white min-h-screen selection:bg-black selection:text-white pb-32 overflow-x-hidden">
         {/* HERO STORY — Full Bleed & Clickable */}
         {heroStory && (
           <Link to={`/editorial/${heroStory.slug}`} className="block relative w-full h-[90vh] overflow-hidden group">
@@ -63,7 +63,7 @@ const Editorial = () => {
                 <p className="font-sans text-[10px] editorial-spacing tracking-[0.5em] uppercase opacity-80">
                   Featured — {heroStory.category}
                 </p>
-                <h1 className="font-serif text-6xl lg:text-[9rem] font-light leading-[0.85] tracking-tighter uppercase italic">
+                <h1 className="font-serif text-5xl md:text-7xl lg:text-[7rem] font-light leading-[0.85] tracking-tighter uppercase italic">
                   {heroStory.title}
                 </h1>
               </motion.div>
@@ -71,7 +71,7 @@ const Editorial = () => {
           </Link>
         )}
 
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-24">
           {/* CATEGORY FILTER — Institutional Horizontal Scroll */}
           <div className="mb-24 overflow-x-auto no-scrollbar border-b border-black/5 pb-8 flex items-center gap-12 whitespace-nowrap">
             <button

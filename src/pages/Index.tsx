@@ -1,7 +1,5 @@
 import Layout from "@/components/layout/Layout";
 import HeroSection from "@/components/home/HeroSection";
-import FeaturedBrands from "@/components/home/FeaturedBrands";
-import CategoryShowcase from "@/components/home/CategoryShowcase";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import EditorialSection from "@/components/home/EditorialSection";
 import { motion } from "framer-motion";
@@ -12,8 +10,6 @@ const Index = () => {
     <Layout>
       <HeroSection />
       <FeaturedProducts />
-      <CategoryShowcase />
-      <FeaturedBrands />
       <EditorialSection />
 
       {/* Brand CTA */}
