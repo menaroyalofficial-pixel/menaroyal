@@ -9,6 +9,7 @@ import { Heart, Minus, Plus, ChevronRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { getProductImage } from "@/utils/localImages";
+import UsdcBuyButton from "@/components/product/UsdcBuyButton";
 
 const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -220,6 +221,8 @@ const ProductDetail = () => {
                         <Heart className={`w-4 h-4 ${wishlisted ? "fill-current" : ""}`} />
                       </button>
                     </div>
+
+                    <UsdcBuyButton productId={product.id} />
 
                     <p className="font-sans text-[9px] text-muted-foreground italic text-center uppercase editorial-spacing opacity-50">
                       Standard delivery within 14-21 business days for artisanal tailoring.

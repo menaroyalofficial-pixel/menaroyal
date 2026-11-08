@@ -1,0 +1,8 @@
+allowBuilds:
+  '@swc/core': true
+  esbuild: true
+  bufferutil: true
+  utf-8-validate: true
+  bigint-buffer: false
+  keccak: false
+  secp256k1: false

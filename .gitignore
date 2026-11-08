@@ -31,3 +31,7 @@ dist-ssr
 .env.production.local
 .vercel
 .env*.local
+.env*
+
+# Demo Day keys and local data (never commit)
+.demo/

@@ -15,7 +15,25 @@ export const localImages: Record<string, string> = {
     // Djellabas
     'the-sandstone-djellaba': '/sandstone-djellaba.jpg',
     'the-atlas-wool-djellaba': '/atlas-wool-djellaba.jpg',
+
+    // Maison
+    'ben-ourain-infinite-line': '/assets/products/Ben%20Ourain-Infinite%20Line.png',
 };
+
+/**
+ * Photos fixed in code until the database row is updated
+ * (supabase/migrations/20261108_solana_v1.sql does the same in the database).
+ * Ben Ourain "Infinite Line": the database points to a stock photo that does not
+ * show the rug. This is the real photo of the rug from the project assets.
+ */
+export const imageOverrides: Record<string, string[]> = {
+    'ben-ourain-infinite-line': ['/assets/products/Ben%20Ourain-Infinite%20Line.png'],
+};
+
+export function withImageOverride<T extends { slug?: string; images?: string[] | null }>(product: T): T {
+    if (!product?.slug || !imageOverrides[product.slug]) return product;
+    return { ...product, images: imageOverrides[product.slug] };
+}
 
 // Helper to get image for a product
 export const getProductImage = (slug: string, index: number = 0): string | null => {

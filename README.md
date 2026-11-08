@@ -1,73 +1,47 @@
-# Welcome to your Lovable project
+# MENA ROYAL
 
-## Project info
+The home of the Middle East's finest design houses. Vite + React + TypeScript, Supabase, deployed on Vercel.
+Payments in USDC and certificates of authenticity on Solana (devnet). How it works: [docs/SOLANA.md](docs/SOLANA.md).
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Run it
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+pnpm install
+pnpm dev            # http://localhost:8080 (the /api routes run too)
+pnpm test           # all tests
+pnpm typecheck
+pnpm build
 ```
 
-**Edit a file directly in GitHub**
+Settings: copy `.env.example` to `.env.local` and fill it in (or `vercel env pull .env.local`). Never commit real values.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Database: run `supabase/migrations/20261108000000_solana_v1.sql` in the Supabase SQL editor.
 
-**Use GitHub Codespaces**
+## Demo Day (devnet, under 2 minutes)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+`pnpm demo:menaroyal` runs the whole story on Solana devnet, with the same code as the website:
 
-## What technologies are used for this project?
+1. The demo house **Dar Rime** registers a caftan, signs it, and its certificate is minted.
+2. A buyer pays **$1,500** in devnet USDC. In one transaction, **$1,200** goes to the house and **$300** to MENA ROYAL.
+3. The certificate moves to the buyer.
+4. It prints the `/verify` link and a QR code: "Made by Dar Rime, signed by the house ✓".
+5. It checks a fake serial: "Can't verify this piece".
 
-This project is built with:
+### Once, before the day
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+1. `pnpm install`
+2. Run `pnpm demo:menaroyal` once. The first time, it creates the demo wallets in `.demo/` and the demo settings in `.env.local`, then stops and prints a wallet address.
+3. Open https://faucet.solana.com, sign in with GitHub, paste that address, choose **devnet**, and request 5 SOL. One top-up is enough for many runs.
+4. Run `pnpm demo:menaroyal` again. It should end with "Done" and a QR code. Each later run takes about 30 to 60 seconds.
 
-## How can I deploy this project?
+### Live, on the laptop and the phone
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+1. **Terminal 1:** `pnpm dev`. If Windows asks about the firewall, allow **private networks** so the phone can reach the laptop.
+2. **Terminal 2:** `pnpm demo:menaroyal`. Talk through steps 1 to 5 as they print. Each step has a Solana Explorer link: open the payment one to show the two transfers in one transaction.
+3. **Laptop:** open the printed `Laptop:` link. It shows "Made by Dar Rime, signed by the house ✓", the photo with ✓, the owner (the buyer) and the history.
+4. **Phone** (same Wi-Fi as the laptop): scan the QR code in the terminal with the camera. The same page opens.
+5. Open the printed `Fake:` link. It shows the red "Can't verify this piece".
 
-## Can I connect a custom domain to my Lovable project?
+If the phone can't reach the laptop (guest Wi-Fi often blocks it), show steps 3 and 5 on the laptop, or set `DEMO_BASE_URL` to the https preview address once it is deployed.
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Paying from the website itself: open `/checkout/usdc/<piece id>` (the house dashboard has a "Sale link" per piece), connect Phantom set to devnet, and approve. Paying by scanning the QR code on a phone needs the https preview address, because wallets refuse http links.

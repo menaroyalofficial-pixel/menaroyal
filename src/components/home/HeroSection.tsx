@@ -13,7 +13,7 @@ const HeroSection = () => {
       >
         <img
           src={heroImage}
-          alt="MENA Luxury"
+          alt="MENA ROYAL"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
@@ -27,14 +27,14 @@ const HeroSection = () => {
           className="max-w-5xl"
         >
           <p className="font-sans text-[10px] md:text-xs editorial-spacing text-white/80 mb-8 tracking-[0.3em]">
-            Institutional Luxury & Craftsmanship
+            Saudi Arabia · UAE · Kuwait · and beyond
           </p>
           <h1 className="font-serif text-5xl md:text-8xl lg:text-9xl font-light text-white leading-[0.9] tracking-tighter mb-10">
             MENA<br />
             <span className="italic">ROYAL</span>
           </h1>
           <p className="font-sans text-xs md:text-sm text-white/60 mt-6 max-w-lg mx-auto leading-relaxed editorial-spacing font-light">
-            A curated portal to the finest design houses of the Middle East.
+            The home of the Middle East's finest design houses. The Gulf first, and the region's international names.
           </p>
         </motion.div>
 

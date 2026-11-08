@@ -107,7 +107,7 @@ const Waitlist = () => {
                                     MENA ROYAL serves as the definitive authority in archiving Middle Eastern excellence. We do not merely sell; we curate heritage.
                                 </p>
                                 <p>
-                                    Partnering with the historic ateliers of Morocco, the avant-garde designers of the UAE, and the legendary artisans of Lebanon, we maintain an exhaustive archival record of high-end craftsmanship.
+                                    We start in the Gulf, with the design houses of Saudi Arabia, the UAE and Kuwait, and bring in the international houses of the wider region: Lebanon, Jordan, Egypt and beyond.
                                 </p>
                             </div>
                         </div>
@@ -171,9 +171,9 @@ const Waitlist = () => {
                                                     className="w-full bg-transparent py-4 font-sans text-[10px] lg:text-[11px] tracking-[0.4em] outline-none appearance-none cursor-pointer text-white/50 hover:text-white uppercase"
                                                 >
                                                     <option value="" disabled className="bg-black">SELECT TERRITORY</option>
-                                                    <option value="gcc" className="bg-black text-white">GCC (UAE, KSA, QATAR)</option>
-                                                    <option value="na" className="bg-black text-white">NORTH AFRICA (MOROCCO, EGYPT)</option>
+                                                    <option value="gcc" className="bg-black text-white">GULF (KSA, UAE, KUWAIT, QATAR)</option>
                                                     <option value="lev" className="bg-black text-white">LEVANT (LEBANON, JORDAN)</option>
+                                                    <option value="na" className="bg-black text-white">NORTH AFRICA (EGYPT, MOROCCO)</option>
                                                     <option value="int" className="bg-black text-white">INTERNATIONAL ARCHIVE</option>
                                                 </select>
                                                 <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none opacity-20 group-hover:opacity-100 transition-opacity">
