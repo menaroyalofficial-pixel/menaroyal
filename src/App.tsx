@@ -37,6 +37,8 @@ import { lazy, Suspense } from "react";
 const UsdcCheckout = lazy(() => import("./pages/UsdcCheckout"));
 const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation"));
 const Verify = lazy(() => import("./pages/Verify"));
+// Pilot previews: left out of production builds entirely (see vite.config.ts).
+const Pilot = __PILOT_ROUTE__ ? lazy(() => import("./pages/Pilot")) : null;
 
 const queryClient = new QueryClient();
 
@@ -63,6 +65,7 @@ const App = () => (
               <Route path="/order/:id" element={<Suspense fallback={null}><OrderConfirmation /></Suspense>} />
               <Route path="/verify" element={<Suspense fallback={null}><Verify /></Suspense>} />
               <Route path="/verify/:serial" element={<Suspense fallback={null}><Verify /></Suspense>} />
+              {Pilot && <Route path="/pilot/:slug" element={<Suspense fallback={null}><Pilot /></Suspense>} />}
               <Route path="/account" element={
                 <ProtectedRoute>
                   <Account />

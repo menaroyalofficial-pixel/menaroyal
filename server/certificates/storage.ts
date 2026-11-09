@@ -25,7 +25,7 @@ export function irysStorage(umi: Umi): CertStorage {
   umi.use(irysUploader({ address: "https://devnet.irys.xyz" }));
   return {
     async storePhoto(bytes, name) {
-      const type = /\.png$/i.test(name) ? "image/png" : "image/jpeg";
+      const type = /\.png$/i.test(name) ? "image/png" : /\.svg$/i.test(name) ? "image/svg+xml" : /\.webp$/i.test(name) ? "image/webp" : "image/jpeg";
       const [uri] = await umi.uploader.upload([createGenericFile(bytes, name, { contentType: type })]);
       return uri;
     },

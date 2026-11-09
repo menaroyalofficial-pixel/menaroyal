@@ -51,8 +51,10 @@ create table if not exists pieces (
   registration_tx text,
   status text not null default 'draft' check (status in ('draft', 'registered', 'sold')),
   owner_wallet text,
+  batch text,
   created_at timestamptz not null default now()
 );
+alter table pieces add column if not exists batch text;
 create index if not exists idx_pieces_house on pieces(house_id);
 create index if not exists idx_pieces_product on pieces(product_id) where status = 'registered';
 
@@ -83,6 +85,9 @@ alter table orders add column if not exists tx_signature text;
 alter table orders add column if not exists failure_reason text;
 alter table orders add column if not exists certificate_status text default 'none';
 alter table orders add column if not exists certificate_tx text;
+-- Personalised pieces: the engraving stays here (private, RLS). Only a salted hash goes on the chain.
+alter table orders add column if not exists engraving text;
+alter table orders add column if not exists engraving_salt text;
 alter table orders alter column customer_email drop not null;
 alter table orders alter column total_amount drop not null;
 alter table orders alter column platform_fee drop not null;

@@ -11,7 +11,7 @@ import {
   houseNoopSigner,
   registerWithServerSigner,
 } from "./certificates/register.js";
-import { assetKeypairFor, generateSerial } from "./certificates/serial.js";
+import { assetKeypairFor, generateSerial, sha256Hex } from "./certificates/serial.js";
 import { downloadPhoto, type CertStorage } from "./certificates/storage.js";
 import type { ChainReader } from "./certificates/verify.js";
 import type { House, Piece, Store } from "./store/types.js";
@@ -25,6 +25,11 @@ export interface NewPieceInput {
   priceUsd: string;
   photoUrls: string[];
   productId?: string | null;
+  batch?: string | null;
+  /** Salted hash of an engraving (personalised pieces). Never the engraving itself. */
+  engravingSha256?: string | null;
+  /** Photo bytes we already have (files on our own server): no download needed. */
+  photoFiles?: { url: string; bytes: Uint8Array }[];
 }
 
 export function validatePieceInput(input: NewPieceInput): NewPieceInput {
@@ -38,6 +43,9 @@ export function validatePieceInput(input: NewPieceInput): NewPieceInput {
     priceUsd: clean(input.priceUsd, 16),
     photoUrls: (input.photoUrls ?? []).map((u) => clean(u, 500)).filter(Boolean).slice(0, 6),
     productId: input.productId ? clean(input.productId, 64) : null,
+    batch: input.batch ? clean(input.batch, 30) : null,
+    engravingSha256: input.engravingSha256 && /^[0-9a-f]{64}$/.test(input.engravingSha256) ? input.engravingSha256 : null,
+    photoFiles: input.photoFiles,
   };
   if (!out.name || !out.maker || !out.country) throw new Error("Name, maker and country are required.");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(out.madeOn)) throw new Error("Date made must look like 2026-11-01.");
@@ -53,8 +61,10 @@ async function prepare(store: Store, storage: CertStorage, house: House, raw: Ne
 
   const photos = [];
   for (const [i, url] of input.photoUrls.entries()) {
-    const { bytes, sha256 } = await downloadPhoto(url);
-    const name = `${serial}-${i + 1}${/\.png($|\?)/i.test(url) ? ".png" : ".jpg"}`;
+    const local = input.photoFiles?.find((f) => f.url === url);
+    const { bytes, sha256 } = local ? { bytes: local.bytes, sha256: sha256Hex(local.bytes) } : await downloadPhoto(url);
+    const ext = /\.png($|\?)/i.test(url) ? ".png" : /\.svg($|\?)/i.test(url) ? ".svg" : /\.webp($|\?)/i.test(url) ? ".webp" : ".jpg";
+    const name = `${serial}-${i + 1}${ext}`;
     photos.push({ uri: await storage.storePhoto(bytes, name, url), sha256 });
   }
 
@@ -69,6 +79,8 @@ async function prepare(store: Store, storage: CertStorage, house: House, raw: Ne
     materials: input.materials,
     made_on: input.madeOn,
     photos,
+    ...(input.batch ? { batch: input.batch } : {}),
+    ...(input.engravingSha256 ? { engraving_sha256: input.engravingSha256 } : {}),
   };
   const uri = await storage.storeJson(buildMetadata(facts));
 
@@ -89,6 +101,7 @@ async function prepare(store: Store, storage: CertStorage, house: House, raw: Ne
     registration_tx: null,
     status: "draft",
     owner_wallet: null,
+    ...(input.batch ? { batch: input.batch } : {}),
     created_at: new Date().toISOString(),
   };
   return { piece, facts, uri };

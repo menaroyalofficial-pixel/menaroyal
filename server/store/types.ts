@@ -34,6 +34,7 @@ export interface Piece {
   registration_tx: string | null;
   status: "draft" | "registered" | "sold";
   owner_wallet: string | null;
+  batch?: string | null;
   created_at: string;
 }
 
@@ -57,6 +58,9 @@ export interface Order {
   failure_reason: string | null;
   certificate_status: CertificateStatus;
   certificate_tx: string | null;
+  /** Personalised bottles: kept off the chain. */
+  engraving?: string | null;
+  engraving_salt?: string | null;
   created_at: string;
 }
 

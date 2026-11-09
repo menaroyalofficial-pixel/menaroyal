@@ -3,6 +3,22 @@
     "buildCommand": "pnpm build",
     "outputDirectory": "dist",
     "installCommand": "pnpm install",
+    "functions": {
+        "api/pilot.ts": {
+            "includeFiles": "{pilots/**,public/pilots/**}",
+            "maxDuration": 60
+        }
+    },
+    "headers": [
+        {
+            "source": "/pilot/(.*)",
+            "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+        },
+        {
+            "source": "/pilots/(.*)",
+            "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+        }
+    ],
     "rewrites": [
         {
             "source": "/((?!api/).*)",

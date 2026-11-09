@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800">
+  <rect width="600" height="800" fill="#F7F2E8"/>
+  <rect x="24" y="24" width="552" height="752" fill="none" stroke="#B8975A" stroke-width="1.5"/>
+  <g fill="none" stroke="#B8975A" stroke-width="2">
+    <rect x="270" y="250" width="60" height="40" rx="4"/>
+    <path d="M285 290 v22 h30 v-22"/>
+    <rect x="215" y="312" width="170" height="230" rx="18"/>
+    <path d="M245 430 h110"/>
+  </g>
+  <text x="300" y="640" text-anchor="middle" font-family="Georgia, serif" font-size="22" letter-spacing="6" fill="#8A7344">MENA ROYAL</text>
+</svg>

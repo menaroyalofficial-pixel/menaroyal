@@ -45,3 +45,23 @@ Database: run `supabase/migrations/20261108000000_solana_v1.sql` in the Supabase
 If the phone can't reach the laptop (guest Wi-Fi often blocks it), show steps 3 and 5 on the laptop, or set `DEMO_BASE_URL` to the https preview address once it is deployed.
 
 Paying from the website itself: open `/checkout/usdc/<piece id>` (the house dashboard has a "Sale link" per piece), connect Phantom set to devnet, and approve. Paying by scanning the QR code on a phone needs the https preview address, because wallets refuse http links.
+
+## Pilot preview for a house (private, preview only)
+
+A private page that shows one house how working with MENA ROYAL looks: its bottles listed, a client buying one (devnet test money), the split, the certificate card (flip, print-ready A6 PDF with a gold-foil layer), the scan and the house dashboard.
+
+- Address: `/pilot/<house-slug>?key=<PILOT_PREVIEW_KEY>`
+- Works only when `PILOT_PREVIEW=true`, the site is **not** production, and the key is right. Otherwise it is a normal 404.
+- Production builds leave out the pilot route and the `public/pilots/` photos. The page is `noindex` and is not in any menu or sitemap.
+- The pilot keeps its own small database (`.demo/pilot-store.json` on the laptop), separate from the live one.
+
+On the laptop: `pnpm dev`, then `pnpm pilot:open fragrance-demo`. It opens the page with the key, without printing it.
+
+### Create a pilot for a new house
+
+1. Copy `pilots/fragrance-demo.json` to `pilots/<house-slug>.json` (lowercase and dashes, e.g. `maison-noor`). Set `"slug"` to the same name.
+2. Fill in the house (name, country, founding year, 2 short lines of story, maker), the brand colours, and 3 to 5 products: name, price in GBP and USD, image file name, notes, size, batch and the date it was made.
+3. Put the photos in `public/pilots/<house-slug>/` with the same file names. A missing photo shows a placeholder card with the product name.
+4. Run `pnpm test` to check the file (a bad price or file name is reported in plain words), then `pnpm pilot:open <house-slug>`.
+
+The first visit makes the house a founding house from that day: 100% to the house and 0% to MENA ROYAL for 3 months, then 20%. These terms are read from the pilot database, not from the page.

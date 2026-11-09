@@ -11,6 +11,7 @@ const ROUTES: Record<string, string> = {
   "/api/pay": "/api/pay.ts",
   "/api/verify": "/api/verify.ts",
   "/api/house": "/api/house.ts",
+  "/api/pilot": "/api/pilot.ts",
   "/api/webhooks/helius": "/api/webhooks/helius.ts",
 };
 

@@ -7,7 +7,7 @@ export interface VerifyResponse {
   ok: boolean;
   serial: string;
   reasons: string[];
-  piece: null | { name: string; maker: string; country: string; materials: string[]; madeOn: string };
+  piece: null | { name: string; maker: string; country: string; materials: string[]; madeOn: string; batch?: string | null };
   house: null | { name: string; wallet: string; signed: boolean };
   registeredAt: string | null;
   owner: null | { address: string; short: string; label: string };
@@ -64,7 +64,8 @@ export const VerifyResult = ({ data }: { data: VerifyResponse }) => {
           <div><p className={label}>Made by</p><p className="mt-1">{data.piece.maker}</p></div>
           <div><p className={label}>Country</p><p className="mt-1">{data.piece.country}</p></div>
           <div><p className={label}>Made on</p><p className="mt-1">{niceDate(data.piece.madeOn)}</p></div>
-          <div className="sm:col-span-2"><p className={label}>Materials</p><p className="mt-1">{data.piece.materials.join(", ") || "—"}</p></div>
+          {data.piece.batch && <div><p className={label}>Batch</p><p className="mt-1">{data.piece.batch}</p></div>}
+          <div className="sm:col-span-2"><p className={label}>Made with</p><p className="mt-1">{data.piece.materials.join(", ") || "—"}</p></div>
         </div>
       )}
 

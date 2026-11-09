@@ -20,6 +20,13 @@ export interface CertificateFacts {
   materials: string[];
   made_on: string;
   photos: { uri: string; sha256: string }[];
+  /** Production batch, when the house tracks one (fragrance, ceramics). */
+  batch?: string;
+  /**
+   * Personalised pieces: only a salted hash of the engraving goes on the chain.
+   * The engraving itself and the salt stay in our database.
+   */
+  engraving_sha256?: string;
 }
 
 /** JSON with sorted keys, so the same facts always give the same hash. */
@@ -53,6 +60,7 @@ export function buildMetadata(facts: CertificateFacts) {
       { trait_type: "Materials", value: facts.materials.join(", ") },
       { trait_type: "Made on", value: facts.made_on },
       { trait_type: "Serial", value: facts.serial },
+      ...(facts.batch ? [{ trait_type: "Batch", value: facts.batch }] : []),
     ],
     properties: {
       category: "image",
@@ -65,6 +73,7 @@ export function buildMetadata(facts: CertificateFacts) {
 function guessType(uri: string): string {
   if (/\.png($|\?)/i.test(uri)) return "image/png";
   if (/\.webp($|\?)/i.test(uri)) return "image/webp";
+  if (/\.svg($|\?)/i.test(uri)) return "image/svg+xml";
   return "image/jpeg";
 }
 

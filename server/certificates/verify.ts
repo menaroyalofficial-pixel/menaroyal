@@ -51,7 +51,7 @@ export interface VerifyResult {
   ok: boolean;
   serial: string;
   reasons: string[];
-  piece: null | { name: string; maker: string; country: string; materials: string[]; madeOn: string };
+  piece: null | { name: string; maker: string; country: string; materials: string[]; madeOn: string; batch?: string | null };
   house: null | { name: string; wallet: string; signed: boolean };
   registeredAt: string | null;
   owner: null | { address: string; short: string; label: string };
@@ -129,6 +129,7 @@ export async function verifySerial(serialInput: string, deps: VerifyDeps): Promi
       country: facts.country,
       materials: facts.materials,
       madeOn: facts.made_on,
+      batch: facts.batch ?? null,
     };
     result.photos = await Promise.all(
       facts.photos.map(async (p) => {
