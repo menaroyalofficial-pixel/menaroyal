@@ -64,10 +64,10 @@ const Login = () => {
                 >
                     <div className="text-center mb-16">
                         <p className="font-sans text-[10px] editorial-spacing text-muted-foreground mb-4 uppercase tracking-[0.2em]">
-                            {mode === 'login' ? 'Institutional Access' : 'Join the Collective'}
+                            {mode === 'login' ? 'Members' : 'Become a member'}
                         </p>
                         <h1 className="font-serif text-5xl font-light text-foreground tracking-tighter">
-                            Collective <span className="italic">{mode === 'login' ? 'Entry' : 'Archival'}</span>
+                            Members <span className="italic">{mode === 'login' ? 'Entry' : 'Welcome'}</span>
                         </h1>
                     </div>
 

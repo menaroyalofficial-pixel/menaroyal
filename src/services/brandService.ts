@@ -9,6 +9,17 @@ export interface BrandApplication {
     message?: string;
 }
 
+export interface FoundingHouseApplication {
+    contact_name: string;
+    company_name: string;
+    country: string;
+    instagram: string;
+    website: string;
+    categories: string[];
+    price_range: string;
+    email: string;
+}
+
 export const brandService = {
     /**
      * Submit a new brand application to the collective.
@@ -19,6 +30,39 @@ export const brandService = {
             .insert([application]);
 
         if (error) throw error;
+        return true;
+    },
+
+    /**
+     * Founding-house application (Apply page). Saved in brand_applications.
+     * If the database has not received the new columns yet, the details are
+     * kept in the message field so nothing is lost.
+     */
+    async applyAsFoundingHouse(a: FoundingHouseApplication) {
+        const row = {
+            company_name: a.company_name.trim(),
+            contact_name: a.contact_name.trim(),
+            email: a.email.trim().toLowerCase(),
+            website: a.website.trim() || null,
+            portfolio_url: a.instagram.trim() || null,
+            country: a.country,
+            instagram: a.instagram.trim(),
+            categories: a.categories,
+            price_range: a.price_range,
+            application_type: 'founding_house',
+        };
+        const { error } = await supabase.from('brand_applications').insert([row]);
+        if (!error) return true;
+        if (error.code !== 'PGRST204' && !/column/i.test(error.message)) throw error;
+        const { error: fallbackError } = await supabase.from('brand_applications').insert([{
+            company_name: row.company_name,
+            contact_name: row.contact_name,
+            email: row.email,
+            website: row.website,
+            portfolio_url: row.portfolio_url,
+            message: `FOUNDING HOUSE · Country: ${a.country} · Instagram: ${a.instagram} · Categories: ${a.categories.join(", ")} · Price range: ${a.price_range}`,
+        }]);
+        if (fallbackError) throw fallbackError;
         return true;
     },
 

@@ -95,11 +95,14 @@ const menuData: Record<string, MenuSection[]> = {
             title: "By Region",
             items: [
                 { label: "All Designers", href: "/designers" },
-                { label: "Moroccan Designers", href: "/designers?origin=morocco" },
-                { label: "UAE Designers", href: "/designers?origin=uae" },
-                { label: "Egyptian Designers", href: "/designers?origin=egypt" },
-                { label: "Palestinian Designers", href: "/designers?origin=palestine" },
-                { label: "Lebanese Designers", href: "/designers?origin=lebanon" },
+                { label: "Saudi Designers", href: "/designers?origin=sa" },
+                { label: "UAE Designers", href: "/designers?origin=ae" },
+                { label: "Kuwaiti Designers", href: "/designers?origin=kw" },
+                { label: "Qatari & Bahraini Designers", href: "/designers?origin=qa" },
+                { label: "Egyptian Designers", href: "/designers?origin=eg" },
+                { label: "Palestinian Designers", href: "/designers?origin=ps" },
+                { label: "Lebanese Designers", href: "/designers?origin=lb" },
+                { label: "Moroccan Designers", href: "/designers?origin=ma" },
             ]
         }
     ]

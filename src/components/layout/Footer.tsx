@@ -71,18 +71,19 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Institutional */}
+          {/* Members */}
           <div className="lg:col-span-2">
-            <h3 className="font-sans text-[10px] editorial-spacing mb-8 text-white/30">Institutional</h3>
+            <h3 className="font-sans text-[10px] editorial-spacing mb-8 text-white/30">Members</h3>
             <ul className="space-y-4">
               {[
                 { label: "About Us", href: "/about" },
                 { label: "FAQ", href: "/faq" },
                 { label: "The Houses", href: "/designers" },
                 { label: "Editorial", href: "/editorial" },
-                { label: "Archive Access", href: "/waitlist" },
+                { label: "Members", href: "/waitlist" },
                 { label: "Global Shipping", href: "/shipping" },
-                { label: "Collective Intake", href: "/apply" },
+                { label: "Verify a piece", href: "/verify" },
+                { label: "Apply as a founding house", href: "/apply" },
                 { label: "Designer Atelier", href: "/designer/login" },
                 { label: "Admin Vault", href: "/admin/login" }
               ].map((item) => (

@@ -1,0 +1,54 @@
+{
+  "slug": "fragrance-demo",
+  "house": {
+    "name": "[House name]",
+    "country": "Oman",
+    "founded": "[Year]",
+    "story": [
+      "[Line 1: where the house began and who founded it.]",
+      "[Line 2: what makes its fragrances different.]"
+    ],
+    "maker": "[House name] perfumers, Muscat"
+  },
+  "colours": {
+    "primary": "#000000",
+    "accent": "#B8975A",
+    "background": "#FFFFFF"
+  },
+  "certificate": { "style": "ivory" },
+  "products": [
+    {
+      "id": "fragrance-1",
+      "name": "[Fragrance 1]",
+      "priceGbp": "180.00",
+      "priceUsd": "230.00",
+      "image": "fragrance-1.jpg",
+      "notes": "[Top note] · [Heart note] · [Base note]",
+      "size": "100 ml",
+      "batch": "B-2026-01",
+      "madeOn": "2026-10-01"
+    },
+    {
+      "id": "fragrance-2",
+      "name": "[Fragrance 2]",
+      "priceGbp": "240.00",
+      "priceUsd": "305.00",
+      "image": "fragrance-2.jpg",
+      "notes": "[Top note] · [Heart note] · [Base note]",
+      "size": "100 ml",
+      "batch": "B-2026-02",
+      "madeOn": "2026-10-08"
+    },
+    {
+      "id": "fragrance-3",
+      "name": "[Fragrance 3]",
+      "priceGbp": "320.00",
+      "priceUsd": "405.00",
+      "image": "fragrance-3.jpg",
+      "notes": "[Top note] · [Heart note] · [Base note]",
+      "size": "50 ml extrait",
+      "batch": "B-2026-03",
+      "madeOn": "2026-10-15"
+    }
+  ]
+}

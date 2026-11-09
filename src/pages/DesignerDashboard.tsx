@@ -12,9 +12,13 @@ import {
     Search, Download, Check
 } from "lucide-react";
 import { toast } from "sonner";
+import { lazy, Suspense } from "react";
+import { BadgeCheck } from "lucide-react";
+
+const HouseCertificates = lazy(() => import("@/components/house/HouseCertificates"));
 
 const DesignerDashboard = () => {
-    const [activeTab, setActiveTab] = useState<'insights' | 'inventory' | 'orders'>('insights');
+    const [activeTab, setActiveTab] = useState<'insights' | 'inventory' | 'orders' | 'certificates'>('insights');
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState<any>(null);
     const [products, setProducts] = useState<any[]>([]);
@@ -202,6 +206,7 @@ const DesignerDashboard = () => {
                                 { id: 'insights', icon: BarChart3, label: 'Insights' },
                                 { id: 'inventory', icon: Package, label: 'Inventory' },
                                 { id: 'orders', icon: Truck, label: 'Orders' },
+                                { id: 'certificates', icon: BadgeCheck, label: 'Certificates & payouts' },
                             ].map(tab => (
                                 <button
                                     key={tab.id}
@@ -229,6 +234,13 @@ const DesignerDashboard = () => {
                             >
                                 {activeTab === 'insights' && renderInsights()}
                                 {activeTab === 'orders' && renderOrders()}
+                                {activeTab === 'certificates' && profile?.brand_id && (
+                                    <>
+                                        <Suspense fallback={null}>
+                                            <HouseCertificates brandId={profile.brand_id} />
+                                        </Suspense>
+                                    </>
+                                )}
                                 {activeTab === 'inventory' && (
                                     <div className="space-y-12">
                                         <div className="flex justify-between items-center mb-16 border-b border-border pb-8">

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { brandService } from "@/services/brandService";
 import { motion, AnimatePresence } from "framer-motion";
+import { normalizeCountry } from "../../shared/cryptoCountries";
 
 const Designers = () => {
   const [brands, setBrands] = useState<any[]>([]);
@@ -27,10 +28,10 @@ const Designers = () => {
 
   useEffect(() => {
     if (origin) {
-      setFilteredBrands(brands.filter(b =>
-        (b.origin_country && b.origin_country.toLowerCase() === origin.toLowerCase()) ||
-        (b.country && b.country.toLowerCase() === origin.toLowerCase())
-      ));
+      // "uae", "AE" and "United Arab Emirates" all mean the same country.
+      const wanted = normalizeCountry(origin) ?? origin.toLowerCase();
+      const same = (v?: string | null) => !!v && (normalizeCountry(v) ?? v.toLowerCase()) === wanted;
+      setFilteredBrands(brands.filter(b => same(b.origin_country) || same(b.country)));
     } else {
       setFilteredBrands(brands);
     }

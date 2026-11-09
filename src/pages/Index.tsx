@@ -23,19 +23,19 @@ const Index = () => {
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             >
               <p className="font-sans text-[10px] editorial-spacing text-muted-foreground mb-8">
-                Institutional Partnership
+                Founding Houses
               </p>
               <h2 className="font-serif text-4xl lg:text-7xl font-light text-foreground leading-[0.9] mb-12">
-                Join the <span className="italic">Collective</span>
+                Become a <span className="italic">Founding House</span>
               </h2>
               <p className="font-sans text-xs text-muted-foreground max-w-md mb-12 leading-relaxed editorial-spacing font-light">
-                Elevate your heritage design house to a global institutional stage. We provide the infrastructure for excellence.
+                We are opening MENA ROYAL to a first circle of houses from Saudi Arabia, the UAE, Kuwait and the region. Founding houses pay 0% commission for their first 3 months.
               </p>
               <Link
                 to="/apply"
                 className="group relative font-sans text-[10px] editorial-spacing px-12 py-5 overflow-hidden inline-block"
               >
-                <span className="relative z-10 text-black group-hover:text-white transition-colors duration-500 uppercase tracking-[0.3em]">Apply for Archival</span>
+                <span className="relative z-10 text-black group-hover:text-white transition-colors duration-500 uppercase tracking-[0.3em]">Apply as a founding house</span>
                 <div className="absolute inset-0 bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 <div className="absolute inset-0 border border-black" />
               </Link>

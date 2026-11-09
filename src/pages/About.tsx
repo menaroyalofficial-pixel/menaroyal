@@ -21,8 +21,8 @@ const About = () => {
                                 The Archive
                             </h1>
                             <p className="font-sans text-sm text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-                                MENA ROYAL is a curated platform celebrating the finest artisanal fashion from the Middle East and North Africa.
-                                We partner with heritage ateliers and contemporary designers to bring you exclusive pieces that honor tradition while embracing modernity.
+                                MENA ROYAL is the home of the Middle East's finest design houses. We start in the Gulf, with houses from Saudi Arabia, the UAE and Kuwait,
+                                and bring in the international houses of the region. Every piece comes with a certificate of authenticity signed by its house.
                             </p>
                         </motion.div>
                     </div>

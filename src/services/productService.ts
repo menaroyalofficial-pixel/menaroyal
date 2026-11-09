@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { withImageOverride } from "@/utils/localImages";
 
 export interface ProductData {
     brand_id: string;
@@ -26,7 +27,7 @@ export const productService = {
             .order('created_at', { ascending: false });
 
         if (error) throw error;
-        return data;
+        return (data || []).map(withImageOverride);
     },
 
     /**
@@ -88,7 +89,7 @@ export const productService = {
             .limit(limit);
 
         if (error) throw error;
-        return data;
+        return (data || []).map(withImageOverride);
     },
 
     /**
@@ -168,7 +169,7 @@ export const productService = {
         const { data, error, count } = await query;
         if (error) throw error;
 
-        return { products: data || [], total: count || 0 };
+        return { products: (data || []).map(withImageOverride), total: count || 0 };
     },
 
     /**
@@ -185,7 +186,7 @@ export const productService = {
             .single();
 
         if (error) throw error;
-        return data;
+        return withImageOverride(data);
     },
 
     /**
@@ -212,6 +213,6 @@ export const productService = {
             .in('id', ids);
 
         if (error) throw error;
-        return data || [];
+        return (data || []).map(withImageOverride);
     }
 };
